@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>498</width>
-    <height>412</height>
+    <height>495</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -24,110 +24,6 @@
      <property name="spacing">
       <number>12</number>
      </property>
-     <item row="2" column="0">
-      <widget class="BodyLabel" name="BodyLabel_3">
-       <property name="text">
-        <string>类型标识:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="2">
-      <widget class="LineEdit" name="line_type_id">
-       <property name="placeholderText">
-        <string>例如: 消耗, 充值,转账记录</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="0">
-      <widget class="BodyLabel" name="BodyLabel_7">
-       <property name="text">
-        <string>有时间列:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="2">
-      <widget class="SwitchButton" name="switch_has_time">
-       <property name="text">
-        <string>无</string>
-       </property>
-       <property name="onText">
-        <string>有</string>
-       </property>
-       <property name="offText">
-        <string>无</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="BodyLabel" name="BodyLabel_2">
-       <property name="text">
-        <string>渠道标识:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="0">
-      <widget class="BodyLabel" name="BodyLabel_6">
-       <property name="text">
-        <string>客户名列 [表字段名]:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="0">
-      <widget class="BodyLabel" name="BodyLabel_4">
-       <property name="text">
-        <string>时间列 [表字段名]:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="LineEdit" name="line_channel_id">
-       <property name="placeholderText">
-        <string>例如: oppo, vivo</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="LineEdit" name="line_data_config_name">
-       <property name="text">
-        <string/>
-       </property>
-       <property name="placeholderText">
-        <string>配置名唯一, 不能重复</string>
-       </property>
-      </widget>
-     </item>
-     <item row="7" column="2">
-      <widget class="LineEdit" name="line_customer_col">
-       <property name="placeholderText">
-        <string>多列用逗号隔开, 不要空格。 例如: 转出方,转入方</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="0">
-      <widget class="BodyLabel" name="BodyLabel_5">
-       <property name="text">
-        <string>时间格式:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
      <item row="3" column="0">
       <widget class="BodyLabel" name="BodyLabel_8">
        <property name="text">
@@ -151,7 +47,77 @@
        </property>
       </widget>
      </item>
-     <item row="5" column="2">
+     <item row="11" column="2">
+      <widget class="LineEdit" name="line_special">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="placeholderText">
+        <string>填写列号,逗号隔开。例如: C,D,E,F</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="2">
+      <layout class="QHBoxLayout" name="horizontalLayout_3">
+       <item>
+        <widget class="RadioButton" name="radio_special_none">
+         <property name="text">
+          <string>无</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
+         </property>
+         <attribute name="buttonGroup">
+          <string notr="true">buttonGroup</string>
+         </attribute>
+        </widget>
+       </item>
+       <item>
+        <widget class="RadioButton" name="radio_special_contain">
+         <property name="text">
+          <string>指定列</string>
+         </property>
+         <attribute name="buttonGroup">
+          <string notr="true">buttonGroup</string>
+         </attribute>
+        </widget>
+       </item>
+       <item>
+        <widget class="RadioButton" name="radio_special_exclude">
+         <property name="text">
+          <string>排除列</string>
+         </property>
+         <attribute name="buttonGroup">
+          <string notr="true">buttonGroup</string>
+         </attribute>
+        </widget>
+       </item>
+       <item>
+        <spacer name="horizontalSpacer_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item row="8" column="0">
+      <widget class="BodyLabel" name="BodyLabel_5">
+       <property name="text">
+        <string>时间格式:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="2">
       <widget class="LineEdit" name="line_time_col">
        <property name="enabled">
         <bool>false</bool>
@@ -161,7 +127,64 @@
        </property>
       </widget>
      </item>
+     <item row="3" column="2">
+      <widget class="LineEdit" name="line_sheet">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="placeholderText">
+        <string>Excel工作簿中数据所在工作表名</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="LineEdit" name="line_data_config_name">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="placeholderText">
+        <string>配置名唯一, 不能重复</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="LineEdit" name="line_channel_id">
+       <property name="placeholderText">
+        <string>例如: oppo, vivo</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="LineEdit" name="line_type_id">
+       <property name="placeholderText">
+        <string>例如: 消耗, 充值,转账记录</string>
+       </property>
+      </widget>
+     </item>
+     <item row="10" column="0">
+      <widget class="BodyLabel" name="BodyLabel_10">
+       <property name="text">
+        <string>特殊需求:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
      <item row="6" column="2">
+      <widget class="SwitchButton" name="switch_has_time">
+       <property name="text">
+        <string>无</string>
+       </property>
+       <property name="onText">
+        <string>有</string>
+       </property>
+       <property name="offText">
+        <string>无</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="2">
       <widget class="LineEdit" name="line_time_format">
        <property name="enabled">
         <bool>false</bool>
@@ -174,13 +197,70 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="2">
-      <widget class="LineEdit" name="line_sheet">
+     <item row="2" column="0">
+      <widget class="BodyLabel" name="BodyLabel_3">
        <property name="text">
-        <string/>
+        <string>类型标识:</string>
        </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="BodyLabel" name="BodyLabel_2">
+       <property name="text">
+        <string>渠道标识:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="0">
+      <widget class="BodyLabel" name="label_special">
+       <property name="text">
+        <string>未指定特殊需求:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0">
+      <widget class="BodyLabel" name="BodyLabel_7">
+       <property name="text">
+        <string>有时间列:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="0">
+      <widget class="BodyLabel" name="BodyLabel_4">
+       <property name="text">
+        <string>时间列 [表字段名]:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="BodyLabel" name="BodyLabel_6">
+       <property name="text">
+        <string>客户名列 [表字段名]:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="2">
+      <widget class="LineEdit" name="line_customer_col">
        <property name="placeholderText">
-        <string>Excel工作簿中数据所在工作表名</string>
+        <string>多列用逗号隔开, 不要空格。 例如: 转出方,转入方</string>
        </property>
       </widget>
      </item>
@@ -249,6 +329,11 @@
    <header>qfluentwidgets</header>
   </customwidget>
   <customwidget>
+   <class>RadioButton</class>
+   <extends>QRadioButton</extends>
+   <header>qfluentwidgets</header>
+  </customwidget>
+  <customwidget>
    <class>BodyLabel</class>
    <extends>QLabel</extends>
    <header>qfluentwidgets</header>
@@ -266,10 +351,12 @@
   <tabstop>line_sheet</tabstop>
   <tabstop>line_time_col</tabstop>
   <tabstop>line_time_format</tabstop>
-  <tabstop>line_customer_col</tabstop>
   <tabstop>btn_cancel</tabstop>
   <tabstop>btn_confirm</tabstop>
  </tabstops>
  <resources/>
  <connections/>
+ <buttongroups>
+  <buttongroup name="buttonGroup"/>
+ </buttongroups>
 </ui>

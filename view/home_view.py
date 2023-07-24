@@ -120,9 +120,6 @@ class HomeView(QWidget, Ui_home_widget):
     def set_status(self, analyse, export, clear_data_file, clear_data_company):
         self.btn_analyse.setEnabled(analyse)
         self.btn_export.setEnabled(export)
-        self.combo_month.setEnabled(not clear_data_company)
-        self.calendar_start.setEnabled(not clear_data_company)
-        self.calendar_end.setEnabled(not clear_data_company)
         self.check_box_select_all.setEnabled(not clear_data_company)
         self.line_edit_search.setEnabled(not clear_data_company)
         if clear_data_file:

@@ -31,3 +31,29 @@ def load_excel(excel, _sheet_name, _channel, _type, _date_col, _date_format, _na
     result.append(temp)
     print(result[0], result[1], result[2])
     return result
+
+
+def get_index(capital):
+    """
+    大写字母（Excel列头）转索引
+    :param capital: 'A' --> 0, 'AA' --> 26
+    :return: int
+    """
+    number = 0
+    capital = capital.upper()
+    for char in capital:
+        number = number * 26 + ord(char) - ord('A') + 1
+    return number - 1
+
+
+def get_char(number):
+    """
+    索引转大写字母（Excel列头）
+    :param number: 0 --> 'A', 26 --> 'AA'
+    :return: str
+    """
+    factor, moder = divmod(number, 26)
+    mod_char = chr(moder + 65)
+    if factor:
+        mod_char = get_char(factor - 1) + mod_char
+    return mod_char

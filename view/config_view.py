@@ -2,7 +2,7 @@ from PyQt6 import QtWidgets
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import QWidget, QHBoxLayout, QSizePolicy
-from qfluentwidgets import PushButton, BodyLabel, CheckBox, FluentIcon, Theme, MessageBox, Dialog
+from qfluentwidgets import PushButton, BodyLabel, CheckBox, FluentIcon, Theme, Dialog
 
 from ui.config_ui import Ui_config_widget
 from util import common_util
@@ -39,7 +39,7 @@ class ConfigView(QWidget, Ui_config_widget):
         self.add_company_config_window.show()
 
     def show_data_config(self):
-        widget_list = [['配置名', '渠道标识', '类型标识', 'Sheet表名', '有时间列', '时间列[表字段名]', '时间格式', '客户名[表字段名]', '操作']]
+        widget_list = [['配置名', '渠道标识', '类型标识', 'Sheet表名', '有时间列', '时间列[表字段名]', '时间格式', '客户名[表字段名]', '特殊导出', '列号', '操作']]
         self.data_config = common_util.load_data_config()
 
         for row in self.data_config.keys():
@@ -80,6 +80,15 @@ class ConfigView(QWidget, Ui_config_widget):
             self.edit_data_config_window.line_time_col.setText(row_data['time_col'])
             self.edit_data_config_window.line_time_format.setText(row_data['time_format'])
             self.edit_data_config_window.line_customer_col.setText(','.join(row_data['customer_col']))
+            if row_data['special_type'] == self.edit_data_config_window.radio_special_none.text():
+                self.edit_data_config_window.radio_special_none.setChecked(True)
+            elif row_data['special_type'] == self.edit_data_config_window.radio_special_contain.text():
+                self.edit_data_config_window.line_special.setEnabled(True)
+                self.edit_data_config_window.radio_special_contain.setChecked(True)
+            else:
+                self.edit_data_config_window.line_special.setEnabled(True)
+                self.edit_data_config_window.radio_special_exclude.setChecked(True)
+            self.edit_data_config_window.line_special.setText(','.join(row_data['special_col']))
 
             self.edit_data_config_window.show()
         elif sender.__contains__('delete_data'):
@@ -161,7 +170,7 @@ class ConfigView(QWidget, Ui_config_widget):
                     temp_widget.setObjectName(f"temp_widget_{widget_item[0]}")
                     temp_widget.setFixedWidth(80)
                     temp_widget.setStyleSheet(f"""
-                    #temp_widget_{row} {{
+                    #temp_widget_{widget_item[0]} {{
                         border-bottom: 1px solid #ddd;
                         border-top: 1px solid #ddd;
                     }}
