@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 
 from openpyxl import load_workbook
@@ -57,3 +58,9 @@ def get_char(number):
     if factor:
         mod_char = get_char(factor - 1) + mod_char
     return mod_char
+
+
+def check_file_type(data_dir, file, config):
+    # todo: 初步检查模板是否匹配文件, 主要是列字段对应和时间格式
+    excel_file = os.path.join(data_dir, file)
+    return True, ''

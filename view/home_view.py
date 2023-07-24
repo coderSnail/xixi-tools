@@ -1,4 +1,5 @@
 import calendar
+import os
 from datetime import datetime
 from enum import Enum
 
@@ -7,7 +8,7 @@ from PyQt6.QtWidgets import QWidget, QFileDialog, QListWidgetItem
 from qfluentwidgets import ToolTipFilter, ToolTipPosition, TeachingTip, InfoBarIcon, TeachingTipTailPosition, InfoBar, InfoBarPosition
 
 from ui.home_ui import Ui_home_widget
-from util import common_util
+from util import common_util, excel_util
 from view.file_item_view import FileItemView
 from xixi_enum import Status
 
@@ -62,29 +63,47 @@ class HomeView(QWidget, Ui_home_widget):
             if not file_item_widget.combo_file_type.text():
                 flag = False
                 break
-        if flag:
-            # a.1 配置了模板的进一步检查模板是否匹配
-
-            # b 根据模板和源数据表配置, 解析文件包含的所有 集团-公司
-
-            self.status_signal.emit(Status.ANALYSED)
-        else:
-            # a.2 未配置模板的文件弹窗提示
+        if not flag:
+            # a.1 未配置模板的文件弹窗提示
             InfoBar.error(
                 title='文件列表错误',
                 content="每行必须选择一个配置!\n如无合适配置请先在源数据表配置中新增一条!",
-                orient=Qt.Orientation.Horizontal,
+                orient=Qt.Orientation.Vertical,
                 isClosable=False,  # disable close button
                 position=InfoBarPosition.TOP,
                 duration=2000,
                 parent=self
             )
+        else:
+            # a.2 配置了模板的进一步检查模板是否匹配
+            check_res = []
+            for index, file_item in enumerate(self.file_item_widgets):
+                file_type = file_item.combo_file_type.text()
+                code, msg = excel_util.check_file_type(self.data_dir, self.data_files[index], self.data_config[file_type])
+                if not code:
+                    check_res.append(msg)
+            if check_res:
+                check_res = '\n'.join(check_res)
+                InfoBar.error(
+                    title='文件列表错误',
+                    content=f"模板匹配失败:\n{check_res}",
+                    orient=Qt.Orientation.Vertical,
+                    isClosable=False,  # disable close button
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+            else:
+                # b 根据模板和源数据表配置, 解析文件包含的所有 集团-公司
+
+                self.status_signal.emit(Status.ANALYSED)
 
     def import_data(self):
         self.status_signal.emit(Status.INIT)
         files, _ = QFileDialog.getOpenFileNames(self, '导入源数据表', r'D:\00-ZJPC\桌面\数据需求', 'Excel文件(*.xlsx)')
         if files:
-            self.label_data_dir.setText('/'.join(files[0].split('/')[:-1]))
+            self.data_dir = '/'.join(files[0].split('/')[:-1])
+            self.label_data_dir.setText(self.data_dir)
             self.data_files = [file.split('/')[-1] for file in files]
 
             self.list_widget_file.clear()
