@@ -1,14 +1,16 @@
 import calendar
-import os
+import os.path
 from datetime import datetime
 from enum import Enum
 
 from PyQt6.QtCore import QDate, pyqtSignal, QFileSystemWatcher, Qt
+from PyQt6.QtGui import QTextCursor
 from PyQt6.QtWidgets import QWidget, QFileDialog, QListWidgetItem
 from qfluentwidgets import ToolTipFilter, ToolTipPosition, TeachingTip, InfoBarIcon, TeachingTipTailPosition, InfoBar, InfoBarPosition
 
+from sub_thread import FileCheckThread, LoadFileThread
 from ui.home_ui import Ui_home_widget
-from util import common_util, excel_util
+from util import common_util
 from view.file_item_view import FileItemView
 from xixi_enum import Status
 
@@ -32,11 +34,11 @@ class HomeView(QWidget, Ui_home_widget):
 
         self.companies_checked = []  # 选中的集团名
         self.companies = []  # 分析后所有源数据表存在的集团名(公司映射后的)
-        self.company_config = common_util.load_company_config()  # 源数据表配置
+        self.company_config = common_util.load_company_config()  # 集团公司配置
 
-        self.data_config_watcher = QFileSystemWatcher([common_util.get_real_path('config', 'data_config.json')])
+        self.data_config_watcher = QFileSystemWatcher([common_util.get_real_path('data_config', 'data_config.json')])
         self.data_config_watcher.fileChanged.connect(self.data_config_changed)
-        self.company_config_watcher = QFileSystemWatcher([common_util.get_real_path('config', 'company_config.json')])
+        self.company_config_watcher = QFileSystemWatcher([common_util.get_real_path('data_config', 'company_config.json')])
         self.company_config_watcher.fileChanged.connect(self.company_config_changed)
 
         # 初始化月份快捷选择下拉框
@@ -71,32 +73,59 @@ class HomeView(QWidget, Ui_home_widget):
                 orient=Qt.Orientation.Vertical,
                 isClosable=False,  # disable close button
                 position=InfoBarPosition.TOP,
-                duration=2000,
+                duration=3000,
+                parent=self
+            )
+        elif len([file_item_widget.combo_file_type.currentText() for file_item_widget in self.file_item_widgets]) != len(
+                set([file_item_widget.combo_file_type.currentText() for file_item_widget in self.file_item_widgets])):
+            InfoBar.error(
+                title='文件列表错误',
+                content="多个文件选择了相同配置,这不合理!\n可能是识别错误,请手动选择或修改源数据表配置!",
+                orient=Qt.Orientation.Vertical,
+                isClosable=False,  # disable close button
+                position=InfoBarPosition.TOP,
+                duration=3000,
                 parent=self
             )
         else:
-            # a.2 配置了模板的进一步检查模板是否匹配
-            check_res = []
-            for index, file_item in enumerate(self.file_item_widgets):
-                file_type = file_item.combo_file_type.text()
-                code, msg = excel_util.check_file_type(self.data_dir, self.data_files[index], self.data_config[file_type])
-                if not code:
-                    check_res.append(msg)
+            # a.2 进一步检查文件与模板是否匹配
+            self.file_check_thread = FileCheckThread(self.file_item_widgets, self.data_dir, self.data_files, self.data_config)
+            self.file_check_thread.file_check_signal.connect(self.file_check)
+            self.file_check_thread.file_check_finished_signal.connect(self.file_check_finished)
+            self.file_check_thread.start()
+
+    def file_check(self, file):
+        self.log(f'正在检查文件 - {file}')
+
+    def file_check_finished(self, file, is_finished, check_res):
+
+        if is_finished:
             if check_res:
                 check_res = '\n'.join(check_res)
+                self.log('文件模板匹配错误, 请根据提示重新设置文件对应模板', 'red')
                 InfoBar.error(
                     title='文件列表错误',
                     content=f"模板匹配失败:\n{check_res}",
                     orient=Qt.Orientation.Vertical,
-                    isClosable=False,  # disable close button
+                    isClosable=True,  # disable close button
                     position=InfoBarPosition.TOP,
-                    duration=2000,
+                    duration=10000,
                     parent=self
                 )
+                self.status_signal.emit(Status.IMPORTED)
             else:
                 # b 根据模板和源数据表配置, 解析文件包含的所有 集团-公司
+                for file_item in self.file_item_widgets:
+                    self.load_file_thread = LoadFileThread(os.path.join(self.data_dir, file_item.label_file_name.text()), self.data_config[file_item.combo_file_type.currentText()])
+                    self.load_file_thread.load_file_signal.connect(self.file_loaded)
+                    self.load_file_thread.start()
+                # self.status_signal.emit(Status.ANALYSED)
+        self.log(f'检查完成 - {file}')
 
-                self.status_signal.emit(Status.ANALYSED)
+    def file_loaded(self, data_dict):
+        print(data_dict['title'])
+        print(data_dict['data'][:2])
+        # 处理载入的数据(以源数据表配置名为key, 保存)
 
     def import_data(self):
         self.status_signal.emit(Status.INIT)
@@ -156,11 +185,13 @@ class HomeView(QWidget, Ui_home_widget):
         # 设置快捷选择月份的初始日期
         self.calendar_start.setDate(QDate(datetime.now().year,
                                           int(self.combo_month.text().strip(' 月')),
-                                          datetime(datetime.now().year, int(self.combo_month.text().strip(' 月')), 1).day))
+                                          datetime(datetime.now().year, int(self.combo_month.text().strip(' 月')),
+                                                   1).day))
         # 设置快捷选择月份的结束日期
         self.calendar_end.setDate(QDate(datetime.now().year,
                                         int(self.combo_month.text().strip(' 月')),
-                                        calendar.monthrange(datetime.now().year, int(self.combo_month.text().strip(' 月')))[1]))
+                                        calendar.monthrange(datetime.now().year,
+                                                            int(self.combo_month.text().strip(' 月')))[1]))
 
         self.calendar_start.dateChanged.connect(self.date_changed)
 
@@ -194,3 +225,10 @@ class HomeView(QWidget, Ui_home_widget):
             self.companies = []
             self.companies_checked = []
             self.company_config = common_util.load_company_config()
+
+    def log(self, log_text, color=None):
+        if color:
+            self.text_log.insertHtml(f'<font color="{color}">{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}:  {log_text}</font><br />')
+        else:
+            self.text_log.insertHtml(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}:  {log_text}<br />')
+        self.text_log.moveCursor(QTextCursor.MoveOperation.End)

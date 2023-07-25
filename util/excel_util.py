@@ -4,34 +4,47 @@ from datetime import datetime
 from openpyxl import load_workbook
 
 
-def load_excel(excel, _sheet_name, _channel, _type, _date_col, _date_format, _name_col_list):
-    # 0 - 渠道名, 1 - 类型(消耗/充值)
-    result = [_channel, _type]
-
+def load_excel(excel, data_config):
+    # 1. 加载 excel 文件
     work_book = load_workbook(excel)
-    sheet = work_book[_sheet_name]
+    sheet = work_book[data_config['sheet']]
     rows = list(sheet.iter_rows(values_only=True))
     # 2 - 表头
-    result.append(rows[0])
-
-    temp = []
+    if data_config['special_type'] == '指定列':
+        data_title = [col for index, col in enumerate(rows[0]) if data_config['special_col'].__contains__(get_char(index))]
+    elif data_config['special_type'] == '排除列':
+        data_title = [col for index, col in enumerate(rows[0]) if not data_config['special_col'].__contains__(get_char(index))]
+    else:
+        data_title = list(rows[0])
+    # 3. 表格数据
+    data = []
     for row in rows[1:]:
         # 3.1 - 日期
-        new_row = [datetime.strptime(row[rows[0].index(_date_col)], _date_format)]
+        if data_config['has_time']:
+            data_row = [datetime.strptime(row[rows[0].index(data_config['time_col'])], data_config['time_format'])]
+        else:
+            data_row = ['']
         # 3.2 - 客户名
         name_list = []
-        for col in _name_col_list:
+        for col in data_config['customer_col']:
             name_list.append(row[rows[0].index(col)].split('-')[0])
-        new_row.append(name_list)
+        data_row.append(name_list)
         # 3.3 - 每行数据
-        new_row.append(row)
-        # 数据汇总成二维数组
-        temp.append(new_row)
+        if data_config['special_type'] == '指定列':
+            data_row.append([col for index, col in enumerate(row) if data_config['special_col'].__contains__(get_char(index))])
+        elif data_config['special_type'] == '排除列':
+            data_row.append([col for index, col in enumerate(row) if not data_config['special_col'].__contains__(get_char(index))])
+        else:
+            data_row.append(list(row))
 
-    # 3 - 数据
-    result.append(temp)
-    print(result[0], result[1], result[2])
-    return result
+        # print(data_row)
+        # 数据汇总成二维数组
+        data.append(data_row)
+
+    # 4. 样式
+    style = []
+
+    return data_title, data, style
 
 
 def get_index(capital):
@@ -61,6 +74,26 @@ def get_char(number):
 
 
 def check_file_type(data_dir, file, config):
-    # todo: 初步检查模板是否匹配文件, 主要是列字段对应和时间格式
+    # 初步检查模板是否匹配文件, 主要是列字段对应和时间格式
     excel_file = os.path.join(data_dir, file)
+    work_book = load_workbook(excel_file)
+    # sheet 名称检查
+    try:
+        sheet = work_book[config['sheet']]
+    except Exception:
+        return False, f'[{file}] sheet表名配置错误'
+    rows = list(sheet.iter_rows(values_only=True, max_row=2))
+    # 字段检查
+    if config['has_time'] and not rows[0].__contains__(config['time_col']):
+        return False, f'[{file}] 不存在时间列/时间列字段名配置错误'
+    for customer_col in config['customer_col']:
+        if not rows[0].__contains__(customer_col):
+            return False, f'[{file}] 客户名配置错误'
+    # 时间格式检查
+    if config['has_time']:
+        try:
+            datetime.strptime(rows[1][rows[0].index(config['time_col'])], config['time_format'])
+        except Exception:
+            return False, f'[{file}] 时间格式配置错误'
+
     return True, ''
