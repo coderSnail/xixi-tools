@@ -138,38 +138,28 @@ class HomeView(QWidget, Ui_home_widget):
             if self.calendar_end.date:
                 end_date = self.calendar_end.date
 
+            # 集团存入set中, 自动去重
             self.groups = set()
-
-            # 处理有时间的数据
-            if self.data_config[data_dict['file_type']]['has_time']:
-                for key in self.excel_data_src.keys():
-                    print(key)
-                    print(self.excel_data_src[key].keys())
-                    des = dict()
-                    des['file_type'] = self.excel_data_src[key]['file_type']
-                    des['title'] = self.excel_data_src[key]['title']
-                    des['title_style'] = self.excel_data_src[key]['title_style']
-                    des['data_style'] = self.excel_data_src[key]['data_style']
-                    self.excel_data_des[key] = des
-                    # print(self.excel_data_src[key]['data'][0][0] is None)
-            # 处理没有时间的数据
-            else:
-                for key in self.excel_data_src.keys():
-                    print(key)
-                    print(self.excel_data_src[key].keys())
-                    des = dict()
-                    des['file_type'] = self.excel_data_src[key]['file_type']
-                    des['title'] = self.excel_data_src[key]['title']
-                    des['title_style'] = self.excel_data_src[key]['title_style']
-                    des['data_style'] = self.excel_data_src[key]['data_style']
-                    self.excel_data_des[key] = des
-                    # print(self.excel_data_src[key]['data'][0][0] is None)
-
-            # for key in self.excel_data_src.keys():
-            #     # print(self.excel_data_src[key].keys())
-            #     # print(self.excel_data_src[key]['data'][0])
-            #     print(self.calendar_start.date, self.excel_data_src[key]['data'][0][0].date())
-            #     print(self.calendar_start.date > self.excel_data_src[key]['data'][0][0].date())
+            for key in self.excel_data_src.keys():
+                # key是 oppo消耗 oppo充值 这种
+                print(key)
+                print(self.excel_data_src[key].keys())
+                print(self.excel_data_src[key]['file_type'])
+                print(self.excel_data_src[key]['title'])
+                print(self.excel_data_src[key]['title_style'])
+                print(self.excel_data_src[key]['data_style'])
+                print(self.excel_data_src[key]['data'][0])
+                if self.data_config[data_dict['file_type']]['has_time']:
+                    # 有时间的表, 根据选定的日期范围进行分析
+                    for row_data in self.excel_data_src[key]['data']:
+                        if start_date <= row_data[0] <= end_date:
+                            self.groups.add(row_data[1])
+                else:
+                    # 没有时间的表, 直接全表分析
+                    for row_data in self.excel_data_src[key]['data']:
+                        self.groups.add(row_data[1])
+            print(self.groups)
+            print('len groups:', len(self.groups))
 
             self.status_signal.emit(Status.ANALYSED)
 
