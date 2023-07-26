@@ -27,6 +27,9 @@ class HomeView(QWidget, Ui_home_widget):
         self.start_date = None  # 开始日期
         self.end_date = None  # 结束日期
 
+        self.excel_data_src = dict()  # 导入时的原始数据
+        self.excel_data_des = dict()  # 经过筛选需要导出的数据
+
         self.data_dir = ''  # 源数据表文件路径
         self.data_files = []  # 源数据表
         self.data_config = common_util.load_data_config()  # 源数据表配置
@@ -36,9 +39,9 @@ class HomeView(QWidget, Ui_home_widget):
         self.companies = []  # 分析后所有源数据表存在的集团名(公司映射后的)
         self.company_config = common_util.load_company_config()  # 集团公司配置
 
-        self.data_config_watcher = QFileSystemWatcher([common_util.get_real_path('data_config', 'data_config.json')])
+        self.data_config_watcher = QFileSystemWatcher([common_util.get_real_path('config', 'data_config.json')])
         self.data_config_watcher.fileChanged.connect(self.data_config_changed)
-        self.company_config_watcher = QFileSystemWatcher([common_util.get_real_path('data_config', 'company_config.json')])
+        self.company_config_watcher = QFileSystemWatcher([common_util.get_real_path('config', 'company_config.json')])
         self.company_config_watcher.fileChanged.connect(self.company_config_changed)
 
         # 初始化月份快捷选择下拉框
@@ -76,6 +79,7 @@ class HomeView(QWidget, Ui_home_widget):
                 duration=3000,
                 parent=self
             )
+            self.status_signal.emit(Status.IMPORTED)
         elif len([file_item_widget.combo_file_type.currentText() for file_item_widget in self.file_item_widgets]) != len(
                 set([file_item_widget.combo_file_type.currentText() for file_item_widget in self.file_item_widgets])):
             InfoBar.error(
@@ -87,6 +91,7 @@ class HomeView(QWidget, Ui_home_widget):
                 duration=3000,
                 parent=self
             )
+            self.status_signal.emit(Status.IMPORTED)
         else:
             # a.2 进一步检查文件与模板是否匹配
             self.file_check_thread = FileCheckThread(self.file_item_widgets, self.data_dir, self.data_files, self.data_config)
@@ -115,17 +120,58 @@ class HomeView(QWidget, Ui_home_widget):
                 self.status_signal.emit(Status.IMPORTED)
             else:
                 # b 根据模板和源数据表配置, 解析文件包含的所有 集团-公司
-                for file_item in self.file_item_widgets:
-                    self.load_file_thread = LoadFileThread(os.path.join(self.data_dir, file_item.label_file_name.text()), self.data_config[file_item.combo_file_type.currentText()])
-                    self.load_file_thread.load_file_signal.connect(self.file_loaded)
-                    self.load_file_thread.start()
-                # self.status_signal.emit(Status.ANALYSED)
+                self.load_file_thread = LoadFileThread(self.file_item_widgets, self.data_dir, self.data_files, self.data_config, self.company_config)
+                self.load_file_thread.load_file_signal.connect(self.file_loaded)
+                self.load_file_thread.start()
+
         self.log(f'检查完成 - {file}')
 
-    def file_loaded(self, data_dict):
-        print(data_dict['title'])
-        print(data_dict['data'][:2])
+    def file_loaded(self, data_dict, is_finished):
         # 处理载入的数据(以源数据表配置名为key, 保存)
+        self.excel_data_src[data_dict['file_type']] = data_dict
+        if is_finished:
+            # 处理开始时间和结束时间
+            start_date = datetime.strptime("1970-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")
+            end_date = datetime.now()
+            if self.calendar_start.date:
+                start_date = self.calendar_start.date
+            if self.calendar_end.date:
+                end_date = self.calendar_end.date
+
+            self.groups = set()
+
+            # 处理有时间的数据
+            if self.data_config[data_dict['file_type']]['has_time']:
+                for key in self.excel_data_src.keys():
+                    print(key)
+                    print(self.excel_data_src[key].keys())
+                    des = dict()
+                    des['file_type'] = self.excel_data_src[key]['file_type']
+                    des['title'] = self.excel_data_src[key]['title']
+                    des['title_style'] = self.excel_data_src[key]['title_style']
+                    des['data_style'] = self.excel_data_src[key]['data_style']
+                    self.excel_data_des[key] = des
+                    # print(self.excel_data_src[key]['data'][0][0] is None)
+            # 处理没有时间的数据
+            else:
+                for key in self.excel_data_src.keys():
+                    print(key)
+                    print(self.excel_data_src[key].keys())
+                    des = dict()
+                    des['file_type'] = self.excel_data_src[key]['file_type']
+                    des['title'] = self.excel_data_src[key]['title']
+                    des['title_style'] = self.excel_data_src[key]['title_style']
+                    des['data_style'] = self.excel_data_src[key]['data_style']
+                    self.excel_data_des[key] = des
+                    # print(self.excel_data_src[key]['data'][0][0] is None)
+
+            # for key in self.excel_data_src.keys():
+            #     # print(self.excel_data_src[key].keys())
+            #     # print(self.excel_data_src[key]['data'][0])
+            #     print(self.calendar_start.date, self.excel_data_src[key]['data'][0][0].date())
+            #     print(self.calendar_start.date > self.excel_data_src[key]['data'][0][0].date())
+
+            self.status_signal.emit(Status.ANALYSED)
 
     def import_data(self):
         self.status_signal.emit(Status.INIT)
@@ -176,6 +222,7 @@ class HomeView(QWidget, Ui_home_widget):
         else:
             self.start_date = self.calendar_start.date
             self.end_date = self.calendar_end.date
+            self.status_signal.emit(Status.IMPORTED)
 
     def combo_month_changed(self):
         """ 快捷选择月份下拉框触发时, 自动选择对应月份的第一天和最后一天 """
@@ -225,6 +272,8 @@ class HomeView(QWidget, Ui_home_widget):
             self.companies = []
             self.companies_checked = []
             self.company_config = common_util.load_company_config()
+            self.excel_data_src = dict()
+            self.excel_data_des = dict()
 
     def log(self, log_text, color=None):
         if color:

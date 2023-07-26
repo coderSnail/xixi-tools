@@ -22,8 +22,10 @@ class AddCompanyConfigView(QWidget, Ui_company_config_widget):
         self.company_config = common_util.load_company_config()
         if self.sender().objectName().__contains__('edit_company_'):
             self.companies = self.company_config[self.sender().objectName().replace('edit_company_', '')]
+            self.type = 'edit'
         else:
             self.companies = []
+            self.type = 'add'
 
         self.line_group.editingFinished.connect(self.verify_company_config_group)
         self.btn_add_company.clicked.connect(self.show_add_company)
@@ -45,7 +47,7 @@ class AddCompanyConfigView(QWidget, Ui_company_config_widget):
             InfoBar.error(
                 title='配置错误',
                 content="至少添加一个公司名!",
-                orient=Qt.Orientation.Horizontal,
+                orient=Qt.Orientation.Vertical,
                 isClosable=False,  # disable close button
                 position=InfoBarPosition.TOP_RIGHT,
                 duration=2000,
@@ -55,7 +57,7 @@ class AddCompanyConfigView(QWidget, Ui_company_config_widget):
             InfoBar.error(
                 title='配置错误',
                 content="集团名不能含有空白字符!",
-                orient=Qt.Orientation.Horizontal,
+                orient=Qt.Orientation.Vertical,
                 isClosable=False,  # disable close button
                 position=InfoBarPosition.TOP_RIGHT,
                 duration=2000,
@@ -66,7 +68,7 @@ class AddCompanyConfigView(QWidget, Ui_company_config_widget):
             InfoBar.error(
                 title='配置错误',
                 content="所有配置项不能为空!",
-                orient=Qt.Orientation.Horizontal,
+                orient=Qt.Orientation.Vertical,
                 isClosable=False,  # disable close button
                 position=InfoBarPosition.TOP_RIGHT,
                 duration=2000,
@@ -77,7 +79,7 @@ class AddCompanyConfigView(QWidget, Ui_company_config_widget):
             InfoBar.error(
                 title='配置错误',
                 content="集团名不能重复!",
-                orient=Qt.Orientation.Horizontal,
+                orient=Qt.Orientation.Vertical,
                 isClosable=False,  # disable close button
                 position=InfoBarPosition.TOP_RIGHT,
                 duration=2000,
@@ -88,19 +90,46 @@ class AddCompanyConfigView(QWidget, Ui_company_config_widget):
             InfoBar.error(
                 title='配置错误',
                 content="公司名不能重复!",
-                orient=Qt.Orientation.Horizontal,
+                orient=Qt.Orientation.Vertical,
                 isClosable=False,  # disable close button
                 position=InfoBarPosition.TOP_RIGHT,
                 duration=2000,
                 parent=self
             )
         else:
-            print(self.company_config)
-            self.companies = companies
-            self.company_config[self.line_group.text()] = self.companies
-            common_util.save_company_config(self.company_config)
-            self.closed.emit()
-            self.close()
+            if self.type == 'edit':
+                # 编辑集团公司时, 检查公司是否全局唯一
+                company_config = common_util.load_company_config()
+                all_companies = []
+                for key in company_config.keys():
+                    all_companies.extend(company_config[key])
+                for company in self.company_config[self.line_group.text()]:
+                    if all_companies.__contains__(company):
+                        all_companies.remove(company)
+                all_companies.extend(companies)
+
+                if len(all_companies) != len(set(all_companies)):
+                    InfoBar.error(
+                        title='修改错误',
+                        content="同个公司只能添加在一个集团下!",
+                        orient=Qt.Orientation.Vertical,
+                        isClosable=False,  # disable close button
+                        position=InfoBarPosition.TOP,
+                        duration=2000,
+                        parent=self
+                    )
+                else:
+                    self.companies = companies
+                    self.company_config[self.line_group.text()] = self.companies
+                    common_util.save_company_config(self.company_config)
+                    self.closed.emit()
+                    self.close()
+            else:
+                self.companies = companies
+                self.company_config[self.line_group.text()] = self.companies
+                common_util.save_company_config(self.company_config)
+                self.closed.emit()
+                self.close()
 
     def add_company(self, company_name):
         # 添加公司名
@@ -119,9 +148,6 @@ class AddCompanyConfigView(QWidget, Ui_company_config_widget):
             self.companies.remove(company)
             self.load_company()
 
-    def edit_company_finished(self):
-        print(self.sender().objectName())
-
     def load_company(self):
         """ 添加公司编辑行 """
         self.list_company.clear()
@@ -134,7 +160,6 @@ class AddCompanyConfigView(QWidget, Ui_company_config_widget):
             h_layout.setSpacing(3)
             line_company = LineEdit(row_widget)
             line_company.setObjectName(f'line_company_{company}')
-            line_company.editingFinished.connect(self.edit_company_finished)
             line_company.setText(company)
             btn_delete_company = PushButton(row_widget)
             btn_delete_company.setObjectName(f'delete_company_{company}')

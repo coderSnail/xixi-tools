@@ -4,7 +4,7 @@ from datetime import datetime
 from openpyxl import load_workbook
 
 
-def load_excel(excel, data_config):
+def load_excel(excel, data_config, company_group_dict):
     # 1. 加载 excel 文件
     work_book = load_workbook(excel)
     sheet = work_book[data_config['sheet']]
@@ -23,12 +23,18 @@ def load_excel(excel, data_config):
         if data_config['has_time']:
             data_row = [datetime.strptime(row[rows[0].index(data_config['time_col'])], data_config['time_format'])]
         else:
-            data_row = ['']
+            data_row = [None]
         # 3.2 - 客户名
-        name_list = []
+        group_name = ''
         for col in data_config['customer_col']:
-            name_list.append(row[rows[0].index(col)].split('-')[0])
-        data_row.append(name_list)
+            company = row[rows[0].index(col)].split('-')[0]
+            # todo 本公司主体, 排除掉
+            if company != '欢聚时代文化传媒（北京）有限公司':
+                group_name = company
+                if company_group_dict.keys().__contains__(company):
+                    group_name = company_group_dict[company]
+
+        data_row.append(group_name)
         # 3.3 - 每行数据
         if data_config['special_type'] == '指定列':
             data_row.append([col for index, col in enumerate(row) if data_config['special_col'].__contains__(get_char(index))])
@@ -37,14 +43,14 @@ def load_excel(excel, data_config):
         else:
             data_row.append(list(row))
 
-        # print(data_row)
         # 数据汇总成二维数组
         data.append(data_row)
 
-    # 4. 样式
-    style = []
+    # todo 4. 标题样式和数据样式
+    title_style = []
+    data_style = []
 
-    return data_title, data, style
+    return data_title, data, title_style, data_style
 
 
 def get_index(capital):

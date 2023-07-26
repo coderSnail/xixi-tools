@@ -4,6 +4,7 @@ from PyQt6.QtWidgets import QWidget
 from qfluentwidgets import InfoBarPosition, InfoBar
 
 from ui.add_company_ui import Ui_add_company_widget
+from util import common_util
 from util.common_util import get_real_path
 
 
@@ -24,18 +25,23 @@ class AddCompanyView(QWidget, Ui_add_company_widget):
             InfoBar.error(
                 title='添加错误',
                 content="公司名不能含有空白字符!",
-                orient=Qt.Orientation.Horizontal,
+                orient=Qt.Orientation.Vertical,
                 isClosable=False,  # disable close button
                 position=InfoBarPosition.TOP,
                 duration=2000,
                 parent=self
             )
         elif self.line_company_name.text():
-            if self.companies.__contains__(self.line_company_name.text()):
+            company_config = common_util.load_company_config()
+            all_companies = []
+            for key in company_config.keys():
+                all_companies.extend(company_config[key])
+
+            if all_companies.__contains__(self.line_company_name.text()):
                 InfoBar.error(
                     title='添加错误',
-                    content="公司名与现有公司重复!",
-                    orient=Qt.Orientation.Horizontal,
+                    content="同个公司只能添加在一个集团下!",
+                    orient=Qt.Orientation.Vertical,
                     isClosable=False,  # disable close button
                     position=InfoBarPosition.TOP,
                     duration=2000,
@@ -48,7 +54,7 @@ class AddCompanyView(QWidget, Ui_add_company_widget):
             InfoBar.error(
                 title='添加错误',
                 content="公司名不能为空!",
-                orient=Qt.Orientation.Horizontal,
+                orient=Qt.Orientation.Vertical,
                 isClosable=False,  # disable close button
                 position=InfoBarPosition.TOP,
                 duration=2000,
