@@ -1,7 +1,63 @@
+import copy
 import os
+import re
 from datetime import datetime
 
 from openpyxl import load_workbook
+from openpyxl.utils import get_column_letter
+from openpyxl.workbook import Workbook
+
+
+def write_excel(excel_file, sheet_list):
+    wb = Workbook()
+
+    for sheet_dict in sheet_list:
+        # ['sheet_name', 'sheet_title', 'sheet_title_style', 'sheet_data_style', 'sheet_data_list']
+        if sheet_dict['sheet_data_list']:
+            ws = wb.create_sheet(sheet_dict['sheet_name'])
+            ws.append(sheet_dict['sheet_title'])
+            for row in sheet_dict['sheet_data_list']:
+                ws.append(row)
+
+            # 设置一个字典用于保存列宽数据
+            dims = {}
+            # 遍历表格数据，获取自适应列宽数据
+            for row in ws.rows:
+                for cell in row:
+                    if cell.value:
+                        # 遍历整个表格，把该列所有的单元格文本进行长度对比，找出最长的单元格
+                        # 在对比单元格文本时需要将中文字符识别为1.7个长度，英文字符识别为1个，这里只需要将文本长度直接加上中文字符数量即可
+                        # re.findall('([\u4e00-\u9fa5])', cell.value)能够识别大部分中文字符
+                        cell_len = len(re.findall('([\u4e00-\u9fa5])', str(cell.value))) + len(str(cell.value))
+                        dims[cell.column] = max((dims.get(cell.column, 0), cell_len))
+            for col, value in dims.items():
+                # 设置列宽，get_column_letter用于获取数字列号对应的字母列号，最后值+2是用来调整最终效果的
+                ws.column_dimensions[get_column_letter(col)].width = value + 2
+            # 复制标题样式
+            ws_rows = list(ws.iter_rows())
+            for index, col in enumerate(ws_rows[0]):
+                col._style = copy.copy(sheet_dict['sheet_title_style'][index]['_style'])
+                col.font = copy.copy(sheet_dict['sheet_title_style'][index]['font'])
+                col.border = copy.copy(sheet_dict['sheet_title_style'][index]['border'])
+                col.fill = copy.copy(sheet_dict['sheet_title_style'][index]['fill'])
+                col.number_format = copy.copy(sheet_dict['sheet_title_style'][index]['number_format'])
+                col.protection = copy.copy(sheet_dict['sheet_title_style'][index]['protection'])
+                col.alignment = copy.copy(sheet_dict['sheet_title_style'][index]['alignment'])
+            # 复制数据样式
+            for ws_row in ws_rows[1:]:
+                for index, col in enumerate(ws_row):
+                    col._style = copy.copy(sheet_dict['sheet_data_style'][index]['_style'])
+                    col.font = copy.copy(sheet_dict['sheet_data_style'][index]['font'])
+                    col.border = copy.copy(sheet_dict['sheet_data_style'][index]['border'])
+                    col.fill = copy.copy(sheet_dict['sheet_data_style'][index]['fill'])
+                    col.number_format = copy.copy(sheet_dict['sheet_data_style'][index]['number_format'])
+                    col.protection = copy.copy(sheet_dict['sheet_data_style'][index]['protection'])
+                    col.alignment = copy.copy(sheet_dict['sheet_data_style'][index]['alignment'])
+
+    del wb['Sheet']
+    wb.save(excel_file)
+
+    return True
 
 
 def load_excel(excel, data_config, company_group_dict):
@@ -28,13 +84,14 @@ def load_excel(excel, data_config, company_group_dict):
         group_name = ''
         for col in data_config['customer_col']:
             company = row[rows[0].index(col)].split('-')[0]
-            # todo 本公司主体, 排除掉
+            # todo 本公司主体, 排除掉, 本公司给本公司转账不统计
             if company != '欢聚时代文化传媒（北京）有限公司':
                 group_name = company
                 if company_group_dict.keys().__contains__(company):
                     group_name = company_group_dict[company]
 
         data_row.append(group_name)
+
         # 3.3 - 每行数据
         if data_config['special_type'] == '指定列':
             data_row.append([col for index, col in enumerate(row) if data_config['special_col'].__contains__(get_char(index))])
@@ -44,11 +101,35 @@ def load_excel(excel, data_config, company_group_dict):
             data_row.append(list(row))
 
         # 数据汇总成二维数组
-        data.append(data_row)
+        if group_name != '':
+            data.append(data_row)
 
     # todo 4. 标题样式和数据样式
+    style_rows = list(sheet.iter_rows(max_row=2))
+
     title_style = []
+    for style_row in style_rows[0]:
+        style_dict = dict()
+        style_dict['_style'] = style_row._style
+        style_dict['font'] = style_row.font
+        style_dict['border'] = style_row.border
+        style_dict['fill'] = style_row.fill
+        style_dict['number_format'] = style_row.number_format
+        style_dict['protection'] = style_row.protection
+        style_dict['alignment'] = style_row.alignment
+        title_style.append(style_dict)
+
     data_style = []
+    for style_row in style_rows[1]:
+        style_dict = dict()
+        style_dict['_style'] = style_row._style
+        style_dict['font'] = style_row.font
+        style_dict['border'] = style_row.border
+        style_dict['fill'] = style_row.fill
+        style_dict['number_format'] = style_row.number_format
+        style_dict['protection'] = style_row.protection
+        style_dict['alignment'] = style_row.alignment
+        data_style.append(style_dict)
 
     return data_title, data, title_style, data_style
 

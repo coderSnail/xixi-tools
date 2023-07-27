@@ -15,7 +15,7 @@
   </property>
   <property name="styleSheet">
    <string notr="true">QWidget {
-	background-color: #fff;
+  background-color: #fff;
 }</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" stretch="2,1">
@@ -110,75 +110,6 @@ PrimaryPushButton:pressed {
           </widget>
          </item>
          <item>
-          <widget class="PrimaryPushButton" name="btn_analyse">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">PushButton {
-    color: black;
-    background: rgba(255, 255, 255, 0.7);
-    border: 1px solid rgba(0, 0, 0, 0.073);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.183);
-    border-radius: 5px;
-    /* font: 14px 'Segoe UI', 'Microsoft YaHei'; */
-    padding: 5px 12px 6px 12px;
-    outline: none;
-}
-
-PushButton[hasIcon=false] {
-    padding: 5px 12px 6px 12px;
-}
-
-PushButton[hasIcon=true] {
-    padding: 5px 12px 6px 36px;
-}
-
-PushButton:hover {
-    background: rgba(249, 249, 249, 0.5);
-}
-
-PushButton:pressed {
-    color: rgba(0, 0, 0, 0.63);
-    background: rgba(249, 249, 249, 0.3);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.073);
-}
-
-PushButton:disabled {
-    color: rgba(0, 0, 0, 0.36);
-    background: rgba(249, 249, 249, 0.3);
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-}
-
-PrimaryPushButton {
-    color: white;
-    background-color: #009faa;
-    border: 1px solid #00a7b3;
-    border-bottom: 1px solid #007780;
-}
-
-PrimaryPushButton:hover {
-    background-color: #00a7b3;
-    border: 1px solid #2daab3;
-    border-bottom: 1px solid #007780;
-}
-
-PrimaryPushButton:pressed {
-    color: rgba(255, 255, 255, 0.63);
-    background-color: #3eabb3;
-    border: 1px solid #3eabb3;
-}</string>
-           </property>
-           <property name="text">
-            <string>分析数据</string>
-           </property>
-          </widget>
-         </item>
-         <item>
           <spacer name="horizontalSpacer_3">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -251,8 +182,8 @@ PrimaryPushButton:pressed {
          </property>
          <property name="styleSheet">
           <string notr="true">QWidget#qwidget1 {
-	border: 1px solid #ddd;
-	border-radius: 10px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
 } </string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -312,7 +243,7 @@ ListWidget {
     background: #fff;
     outline: none;
     /* border: none; */
-	border-top: 1px solid #ddd;
+  border-top: 1px solid #ddd;
     /* font: 13px 'Segoe UI', 'Microsoft YaHei'; */
     selection-background-color: transparent;
     alternate-background-color: transparent;
@@ -653,6 +584,75 @@ CalendarPicker[hasDate=true] {
           </widget>
          </item>
          <item>
+          <widget class="PrimaryPushButton" name="btn_analyse">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="styleSheet">
+            <string notr="true">PushButton {
+    color: black;
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0.073);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.183);
+    border-radius: 5px;
+    /* font: 14px 'Segoe UI', 'Microsoft YaHei'; */
+    padding: 5px 12px 6px 12px;
+    outline: none;
+}
+
+PushButton[hasIcon=false] {
+    padding: 5px 12px 6px 12px;
+}
+
+PushButton[hasIcon=true] {
+    padding: 5px 12px 6px 36px;
+}
+
+PushButton:hover {
+    background: rgba(249, 249, 249, 0.5);
+}
+
+PushButton:pressed {
+    color: rgba(0, 0, 0, 0.63);
+    background: rgba(249, 249, 249, 0.3);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.073);
+}
+
+PushButton:disabled {
+    color: rgba(0, 0, 0, 0.36);
+    background: rgba(249, 249, 249, 0.3);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+PrimaryPushButton {
+    color: white;
+    background-color: #009faa;
+    border: 1px solid #00a7b3;
+    border-bottom: 1px solid #007780;
+}
+
+PrimaryPushButton:hover {
+    background-color: #00a7b3;
+    border: 1px solid #2daab3;
+    border-bottom: 1px solid #007780;
+}
+
+PrimaryPushButton:pressed {
+    color: rgba(255, 255, 255, 0.63);
+    background-color: #3eabb3;
+    border: 1px solid #3eabb3;
+}</string>
+           </property>
+           <property name="text">
+            <string>分析数据</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <spacer name="horizontalSpacer_4">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
@@ -746,14 +746,17 @@ PrimaryPushButton:pressed {
          </property>
          <property name="styleSheet">
           <string notr="true">QWidget#qwidget2 {
-	border: 1px solid #ddd;
-	border-radius: 10px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
 } </string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_3">
           <item>
            <widget class="QWidget" name="widget_2" native="true">
             <layout class="QHBoxLayout" name="horizontalLayout_9">
+             <property name="spacing">
+              <number>0</number>
+             </property>
              <property name="leftMargin">
               <number>0</number>
              </property>
@@ -788,16 +791,78 @@ PrimaryPushButton:pressed {
               </widget>
              </item>
              <item>
+              <widget class="BodyLabel" name="BodyLabel_4">
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="BodyLabel" name="label_checked_count">
+               <property name="minimumSize">
+                <size>
+                 <width>32</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>32</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>0</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="BodyLabel" name="BodyLabel">
+               <property name="text">
+                <string>/</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="BodyLabel" name="label_total_count">
+               <property name="minimumSize">
+                <size>
+                 <width>32</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>32</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>0</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="BodyLabel" name="BodyLabel_5">
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item>
               <widget class="SearchLineEdit" name="line_edit_search">
                <property name="minimumSize">
                 <size>
-                 <width>120</width>
+                 <width>260</width>
                  <height>32</height>
                 </size>
                </property>
                <property name="maximumSize">
                 <size>
-                 <width>200</width>
+                 <width>260</width>
                  <height>32</height>
                 </size>
                </property>
@@ -837,10 +902,10 @@ PrimaryPushButton:pressed {
             <property name="styleSheet">
              <string notr="true">ListView,
 ListWidget {
-    background: transparent;
+    background: #fff;
     outline: none;
     /* border: none; */
-	border-top: 1px solid #ddd;
+  border-top: 1px solid #ddd;
     /* font: 13px 'Segoe UI', 'Microsoft YaHei'; */
     selection-background-color: transparent;
     alternate-background-color: transparent;
@@ -850,7 +915,7 @@ ListWidget {
 
 ListView::item,
 ListWidget::item {
-    background: transparent;
+    background: #fff;
     border: 0px;
     padding-left: 11px;
     padding-right: 11px;
@@ -932,7 +997,7 @@ ListWidget::indicator:indeterminate:disabled {
              <bool>false</bool>
             </property>
             <property name="selectionMode">
-             <enum>QAbstractItemView::ExtendedSelection</enum>
+             <enum>QAbstractItemView::NoSelection</enum>
             </property>
            </widget>
           </item>

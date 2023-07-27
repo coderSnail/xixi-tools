@@ -1,14 +1,13 @@
 import calendar
-import os.path
 from datetime import datetime
 from enum import Enum
 
 from PyQt6.QtCore import QDate, pyqtSignal, QFileSystemWatcher, Qt
 from PyQt6.QtGui import QTextCursor
-from PyQt6.QtWidgets import QWidget, QFileDialog, QListWidgetItem
-from qfluentwidgets import ToolTipFilter, ToolTipPosition, TeachingTip, InfoBarIcon, TeachingTipTailPosition, InfoBar, InfoBarPosition
+from PyQt6.QtWidgets import QWidget, QFileDialog, QListWidgetItem, QCompleter
+from qfluentwidgets import ToolTipFilter, ToolTipPosition, TeachingTip, InfoBarIcon, TeachingTipTailPosition, InfoBar, InfoBarPosition, CheckBox
 
-from sub_thread import FileCheckThread, LoadFileThread
+from sub_thread import FileCheckThread, LoadFileThread, LoadGroupsThread, ExportFileThread
 from ui.home_ui import Ui_home_widget
 from util import common_util
 from view.file_item_view import FileItemView
@@ -28,7 +27,6 @@ class HomeView(QWidget, Ui_home_widget):
         self.end_date = None  # 结束日期
 
         self.excel_data_src = dict()  # 导入时的原始数据
-        self.excel_data_des = dict()  # 经过筛选需要导出的数据
 
         self.data_dir = ''  # 源数据表文件路径
         self.data_files = []  # 源数据表
@@ -59,9 +57,37 @@ class HomeView(QWidget, Ui_home_widget):
 
         self.btn_import.clicked.connect(self.import_data)
         self.btn_analyse.clicked.connect(self.analyse_data)
+        self.btn_export.clicked.connect(self.export_data)
+
+    def export_data(self):
+        """ 导出选中的数据 """
+        if (self.calendar_start.date.isNull() and self.calendar_end.date.isNull()) or (not self.calendar_start.date.isNull() and not self.calendar_end.date.isNull()):
+
+            if self.companies_checked:
+                self.export_file_thread = ExportFileThread(self.data_dir, [company.text() for company in self.companies_checked], self.start_date, self.end_date, self.excel_data_src)
+                self.export_file_thread.start()
+            else:
+                InfoBar.error(
+                    title='文件导出错误',
+                    content="没有选择任何公司集团啊!\n你想做甚?!嗯~???",
+                    orient=Qt.Orientation.Vertical,
+                    position=InfoBarPosition.TOP,
+                    duration=3000,
+                    parent=self
+                )
+        else:
+            InfoBar.error(
+                title='文件导出错误',
+                content="既然选择了时间, 为啥空一个不选呢???\n开始和结束时间都要选上喔~",
+                orient=Qt.Orientation.Vertical,
+                position=InfoBarPosition.TOP,
+                duration=3000,
+                parent=self
+            )
 
     def analyse_data(self):
-        # todo: 校验文件与模板是否匹配, 时间格式是否能正确解析
+        self.status_signal.emit(self.status.IMPORTED)
+        self.btn_analyse.setEnabled(False)
         # a 检查所有文件是否都配置了模板
         flag = True
         for file_item_widget in self.file_item_widgets:
@@ -131,37 +157,80 @@ class HomeView(QWidget, Ui_home_widget):
         self.excel_data_src[data_dict['file_type']] = data_dict
         if is_finished:
             # 处理开始时间和结束时间
-            start_date = datetime.strptime("1970-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")
-            end_date = datetime.now()
+            self.start_date = datetime.strptime("1970-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")
+            self.end_date = datetime.now()
             if self.calendar_start.date:
-                start_date = self.calendar_start.date
+                self.start_date = self.calendar_start.date
             if self.calendar_end.date:
-                end_date = self.calendar_end.date
+                self.end_date = self.calendar_end.date
 
-            # 集团存入set中, 自动去重
-            self.groups = set()
-            for key in self.excel_data_src.keys():
-                # key是 oppo消耗 oppo充值 这种
-                print(key)
-                print(self.excel_data_src[key].keys())
-                print(self.excel_data_src[key]['file_type'])
-                print(self.excel_data_src[key]['title'])
-                print(self.excel_data_src[key]['title_style'])
-                print(self.excel_data_src[key]['data_style'])
-                print(self.excel_data_src[key]['data'][0])
-                if self.data_config[data_dict['file_type']]['has_time']:
-                    # 有时间的表, 根据选定的日期范围进行分析
-                    for row_data in self.excel_data_src[key]['data']:
-                        if start_date <= row_data[0] <= end_date:
-                            self.groups.add(row_data[1])
-                else:
-                    # 没有时间的表, 直接全表分析
-                    for row_data in self.excel_data_src[key]['data']:
-                        self.groups.add(row_data[1])
-            print(self.groups)
-            print('len groups:', len(self.groups))
+            self.load_groups_thread = LoadGroupsThread(self.start_date, self.end_date, self.excel_data_src, self.data_config)
+            self.load_groups_thread.generate_groups_signal.connect(self.init_company_list_and_company_search)
+            self.load_groups_thread.start()
 
-            self.status_signal.emit(Status.ANALYSED)
+    def init_company_list_and_company_search(self, groups):
+        # 集团列表和搜索框填充数据
+        self.groups = groups
+        self.list_widget_company.clear()
+        self.line_edit_search.clear()
+        self.company_check_box_list = []  # 集团列表
+
+        # 搜索框赋值
+        self.completer = QCompleter(self.groups, self.line_edit_search)
+        self.completer.setFilterMode(Qt.MatchFlag.MatchContains)
+        self.completer.setCaseSensitivity(Qt.CaseSensitivity.CaseInsensitive)
+        self.line_edit_search.setCompleter(self.completer)
+        self.line_edit_search.textChanged.connect(self.search_group_checked)
+        self.check_box_select_all.toggled.connect(self.check_all_company)
+
+        # 集团列表赋值
+        self.label_total_count.setText(f'{len(self.groups)}')
+        for group in self.groups:
+            check_box = CheckBox()
+            check_box.setObjectName(f"check_box_{group}")
+            check_box.setText(group)
+            self.company_check_box_list.append(check_box)
+            check_box.toggled.connect(self.verify_check_all)
+
+            item = QListWidgetItem(self.list_widget_company)
+            item.setToolTip(group)
+            self.list_widget_company.setItemWidget(item, check_box)
+        self.status_signal.emit(Status.ANALYSED)
+
+    def search_group_checked(self):
+        if self.groups.__contains__(self.line_edit_search.text()):
+            check_box = self.findChild(CheckBox, f'check_box_{self.line_edit_search.text()}')
+            check_box.setChecked(True)
+            check_box.setFocus()
+            self.line_edit_search.setText('')
+
+    def check_all_company(self):
+        self.companies_checked = []
+        for group in self.groups:
+            check_box = self.findChild(CheckBox, f'check_box_{group}')
+            check_box.toggled.disconnect(self.verify_check_all)
+            check_box.setChecked(self.check_box_select_all.isChecked())
+            check_box.toggled.connect(self.verify_check_all)
+            if self.check_box_select_all.isChecked():
+                self.companies_checked.append(check_box)
+        self.label_checked_count.setText(f'{len(self.companies_checked)}')
+
+    def verify_check_all(self):
+        flag = True
+        self.companies_checked = []
+        for group in self.groups:
+            check_box = self.findChild(CheckBox, f'check_box_{group}')
+            if check_box.isChecked():
+                self.companies_checked.append(check_box)
+            flag = flag and check_box.isChecked()
+        self.label_checked_count.setText(f'{len(self.companies_checked)}')
+
+        if self.check_box_select_all.isChecked():
+            self.check_box_select_all.toggled.disconnect(self.check_all_company)
+            self.check_box_select_all.setChecked(flag)
+            self.check_box_select_all.toggled.connect(self.check_all_company)
+        else:
+            self.check_box_select_all.setChecked(flag)
 
     def import_data(self):
         self.status_signal.emit(Status.INIT)
@@ -222,8 +291,7 @@ class HomeView(QWidget, Ui_home_widget):
         # 设置快捷选择月份的初始日期
         self.calendar_start.setDate(QDate(datetime.now().year,
                                           int(self.combo_month.text().strip(' 月')),
-                                          datetime(datetime.now().year, int(self.combo_month.text().strip(' 月')),
-                                                   1).day))
+                                          datetime(datetime.now().year, int(self.combo_month.text().strip(' 月')), 1).day))
         # 设置快捷选择月份的结束日期
         self.calendar_end.setDate(QDate(datetime.now().year,
                                         int(self.combo_month.text().strip(' 月')),
@@ -263,7 +331,8 @@ class HomeView(QWidget, Ui_home_widget):
             self.companies_checked = []
             self.company_config = common_util.load_company_config()
             self.excel_data_src = dict()
-            self.excel_data_des = dict()
+            self.label_total_count.setText('0')
+            self.label_checked_count.setText('0')
 
     def log(self, log_text, color=None):
         if color:

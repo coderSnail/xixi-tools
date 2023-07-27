@@ -14,7 +14,7 @@ class Ui_home_widget(object):
         home_widget.setObjectName("home_widget")
         home_widget.resize(1049, 673)
         home_widget.setStyleSheet("QWidget {\n"
-"    background-color: #fff;\n"
+"  background-color: #fff;\n"
 "}")
         self.verticalLayout = QtWidgets.QVBoxLayout(home_widget)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -88,68 +88,6 @@ class Ui_home_widget(object):
 "}")
         self.btn_import.setObjectName("btn_import")
         self.horizontalLayout_6.addWidget(self.btn_import)
-        self.btn_analyse = PrimaryPushButton(parent=home_widget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.btn_analyse.sizePolicy().hasHeightForWidth())
-        self.btn_analyse.setSizePolicy(sizePolicy)
-        self.btn_analyse.setStyleSheet("PushButton {\n"
-"    color: black;\n"
-"    background: rgba(255, 255, 255, 0.7);\n"
-"    border: 1px solid rgba(0, 0, 0, 0.073);\n"
-"    border-bottom: 1px solid rgba(0, 0, 0, 0.183);\n"
-"    border-radius: 5px;\n"
-"    /* font: 14px \'Segoe UI\', \'Microsoft YaHei\'; */\n"
-"    padding: 5px 12px 6px 12px;\n"
-"    outline: none;\n"
-"}\n"
-"\n"
-"PushButton[hasIcon=false] {\n"
-"    padding: 5px 12px 6px 12px;\n"
-"}\n"
-"\n"
-"PushButton[hasIcon=true] {\n"
-"    padding: 5px 12px 6px 36px;\n"
-"}\n"
-"\n"
-"PushButton:hover {\n"
-"    background: rgba(249, 249, 249, 0.5);\n"
-"}\n"
-"\n"
-"PushButton:pressed {\n"
-"    color: rgba(0, 0, 0, 0.63);\n"
-"    background: rgba(249, 249, 249, 0.3);\n"
-"    border-bottom: 1px solid rgba(0, 0, 0, 0.073);\n"
-"}\n"
-"\n"
-"PushButton:disabled {\n"
-"    color: rgba(0, 0, 0, 0.36);\n"
-"    background: rgba(249, 249, 249, 0.3);\n"
-"    border: 1px solid rgba(0, 0, 0, 0.06);\n"
-"    border-bottom: 1px solid rgba(0, 0, 0, 0.06);\n"
-"}\n"
-"\n"
-"PrimaryPushButton {\n"
-"    color: white;\n"
-"    background-color: #009faa;\n"
-"    border: 1px solid #00a7b3;\n"
-"    border-bottom: 1px solid #007780;\n"
-"}\n"
-"\n"
-"PrimaryPushButton:hover {\n"
-"    background-color: #00a7b3;\n"
-"    border: 1px solid #2daab3;\n"
-"    border-bottom: 1px solid #007780;\n"
-"}\n"
-"\n"
-"PrimaryPushButton:pressed {\n"
-"    color: rgba(255, 255, 255, 0.63);\n"
-"    background-color: #3eabb3;\n"
-"    border: 1px solid #3eabb3;\n"
-"}")
-        self.btn_analyse.setObjectName("btn_analyse")
-        self.horizontalLayout_6.addWidget(self.btn_analyse)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
         self.horizontalLayout_6.addItem(spacerItem)
         self.BodyLabel_6 = BodyLabel(parent=home_widget)
@@ -176,8 +114,8 @@ class Ui_home_widget(object):
         font.setPointSize(10)
         self.qwidget1.setFont(font)
         self.qwidget1.setStyleSheet("QWidget#qwidget1 {\n"
-"    border: 1px solid #ddd;\n"
-"    border-radius: 10px;\n"
+"  border: 1px solid #ddd;\n"
+"  border-radius: 10px;\n"
 "} ")
         self.qwidget1.setObjectName("qwidget1")
         self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.qwidget1)
@@ -211,7 +149,7 @@ class Ui_home_widget(object):
 "    background: #fff;\n"
 "    outline: none;\n"
 "    /* border: none; */\n"
-"    border-top: 1px solid #ddd;\n"
+"  border-top: 1px solid #ddd;\n"
 "    /* font: 13px \'Segoe UI\', \'Microsoft YaHei\'; */\n"
 "    selection-background-color: transparent;\n"
 "    alternate-background-color: transparent;\n"
@@ -499,6 +437,68 @@ class Ui_home_widget(object):
 "}")
         self.calendar_end.setObjectName("calendar_end")
         self.horizontalLayout_7.addWidget(self.calendar_end)
+        self.btn_analyse = PrimaryPushButton(parent=home_widget)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.btn_analyse.sizePolicy().hasHeightForWidth())
+        self.btn_analyse.setSizePolicy(sizePolicy)
+        self.btn_analyse.setStyleSheet("PushButton {\n"
+"    color: black;\n"
+"    background: rgba(255, 255, 255, 0.7);\n"
+"    border: 1px solid rgba(0, 0, 0, 0.073);\n"
+"    border-bottom: 1px solid rgba(0, 0, 0, 0.183);\n"
+"    border-radius: 5px;\n"
+"    /* font: 14px \'Segoe UI\', \'Microsoft YaHei\'; */\n"
+"    padding: 5px 12px 6px 12px;\n"
+"    outline: none;\n"
+"}\n"
+"\n"
+"PushButton[hasIcon=false] {\n"
+"    padding: 5px 12px 6px 12px;\n"
+"}\n"
+"\n"
+"PushButton[hasIcon=true] {\n"
+"    padding: 5px 12px 6px 36px;\n"
+"}\n"
+"\n"
+"PushButton:hover {\n"
+"    background: rgba(249, 249, 249, 0.5);\n"
+"}\n"
+"\n"
+"PushButton:pressed {\n"
+"    color: rgba(0, 0, 0, 0.63);\n"
+"    background: rgba(249, 249, 249, 0.3);\n"
+"    border-bottom: 1px solid rgba(0, 0, 0, 0.073);\n"
+"}\n"
+"\n"
+"PushButton:disabled {\n"
+"    color: rgba(0, 0, 0, 0.36);\n"
+"    background: rgba(249, 249, 249, 0.3);\n"
+"    border: 1px solid rgba(0, 0, 0, 0.06);\n"
+"    border-bottom: 1px solid rgba(0, 0, 0, 0.06);\n"
+"}\n"
+"\n"
+"PrimaryPushButton {\n"
+"    color: white;\n"
+"    background-color: #009faa;\n"
+"    border: 1px solid #00a7b3;\n"
+"    border-bottom: 1px solid #007780;\n"
+"}\n"
+"\n"
+"PrimaryPushButton:hover {\n"
+"    background-color: #00a7b3;\n"
+"    border: 1px solid #2daab3;\n"
+"    border-bottom: 1px solid #007780;\n"
+"}\n"
+"\n"
+"PrimaryPushButton:pressed {\n"
+"    color: rgba(255, 255, 255, 0.63);\n"
+"    background-color: #3eabb3;\n"
+"    border: 1px solid #3eabb3;\n"
+"}")
+        self.btn_analyse.setObjectName("btn_analyse")
+        self.horizontalLayout_7.addWidget(self.btn_analyse)
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
         self.horizontalLayout_7.addItem(spacerItem1)
         self.btn_export = PrimaryPushButton(parent=home_widget)
@@ -570,8 +570,8 @@ class Ui_home_widget(object):
         font.setPointSize(10)
         self.qwidget2.setFont(font)
         self.qwidget2.setStyleSheet("QWidget#qwidget2 {\n"
-"    border: 1px solid #ddd;\n"
-"    border-radius: 10px;\n"
+"  border: 1px solid #ddd;\n"
+"  border-radius: 10px;\n"
 "} ")
         self.qwidget2.setObjectName("qwidget2")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.qwidget2)
@@ -580,6 +580,7 @@ class Ui_home_widget(object):
         self.widget_2.setObjectName("widget_2")
         self.horizontalLayout_9 = QtWidgets.QHBoxLayout(self.widget_2)
         self.horizontalLayout_9.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_9.setSpacing(0)
         self.horizontalLayout_9.setObjectName("horizontalLayout_9")
         self.check_box_select_all = CheckBox(parent=self.widget_2)
         self.check_box_select_all.setMinimumSize(QtCore.QSize(29, 22))
@@ -591,9 +592,31 @@ class Ui_home_widget(object):
         self.check_box_select_all.setFont(font)
         self.check_box_select_all.setObjectName("check_box_select_all")
         self.horizontalLayout_9.addWidget(self.check_box_select_all)
+        self.BodyLabel_4 = BodyLabel(parent=self.widget_2)
+        self.BodyLabel_4.setText("")
+        self.BodyLabel_4.setObjectName("BodyLabel_4")
+        self.horizontalLayout_9.addWidget(self.BodyLabel_4)
+        self.label_checked_count = BodyLabel(parent=self.widget_2)
+        self.label_checked_count.setMinimumSize(QtCore.QSize(32, 0))
+        self.label_checked_count.setMaximumSize(QtCore.QSize(32, 16777215))
+        self.label_checked_count.setAlignment(QtCore.Qt.AlignmentFlag.AlignRight|QtCore.Qt.AlignmentFlag.AlignTrailing|QtCore.Qt.AlignmentFlag.AlignVCenter)
+        self.label_checked_count.setObjectName("label_checked_count")
+        self.horizontalLayout_9.addWidget(self.label_checked_count)
+        self.BodyLabel = BodyLabel(parent=self.widget_2)
+        self.BodyLabel.setObjectName("BodyLabel")
+        self.horizontalLayout_9.addWidget(self.BodyLabel)
+        self.label_total_count = BodyLabel(parent=self.widget_2)
+        self.label_total_count.setMinimumSize(QtCore.QSize(32, 0))
+        self.label_total_count.setMaximumSize(QtCore.QSize(32, 16777215))
+        self.label_total_count.setObjectName("label_total_count")
+        self.horizontalLayout_9.addWidget(self.label_total_count)
+        self.BodyLabel_5 = BodyLabel(parent=self.widget_2)
+        self.BodyLabel_5.setText("")
+        self.BodyLabel_5.setObjectName("BodyLabel_5")
+        self.horizontalLayout_9.addWidget(self.BodyLabel_5)
         self.line_edit_search = SearchLineEdit(parent=self.widget_2)
-        self.line_edit_search.setMinimumSize(QtCore.QSize(120, 32))
-        self.line_edit_search.setMaximumSize(QtCore.QSize(200, 32))
+        self.line_edit_search.setMinimumSize(QtCore.QSize(260, 32))
+        self.line_edit_search.setMaximumSize(QtCore.QSize(260, 32))
         font = QtGui.QFont()
         font.setFamily("Microsoft YaHei")
         font.setPointSize(10)
@@ -611,10 +634,10 @@ class Ui_home_widget(object):
         self.list_widget_company.setFont(font)
         self.list_widget_company.setStyleSheet("ListView,\n"
 "ListWidget {\n"
-"    background: transparent;\n"
+"    background: #fff;\n"
 "    outline: none;\n"
 "    /* border: none; */\n"
-"    border-top: 1px solid #ddd;\n"
+"  border-top: 1px solid #ddd;\n"
 "    /* font: 13px \'Segoe UI\', \'Microsoft YaHei\'; */\n"
 "    selection-background-color: transparent;\n"
 "    alternate-background-color: transparent;\n"
@@ -624,7 +647,7 @@ class Ui_home_widget(object):
 "\n"
 "ListView::item,\n"
 "ListWidget::item {\n"
-"    background: transparent;\n"
+"    background: #fff;\n"
 "    border: 0px;\n"
 "    padding-left: 11px;\n"
 "    padding-right: 11px;\n"
@@ -702,7 +725,7 @@ class Ui_home_widget(object):
 "    background-color: rgb(199, 199, 199);\n"
 "}")
         self.list_widget_company.setAlternatingRowColors(False)
-        self.list_widget_company.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.ExtendedSelection)
+        self.list_widget_company.setSelectionMode(QtWidgets.QAbstractItemView.SelectionMode.NoSelection)
         self.list_widget_company.setObjectName("list_widget_company")
         self.verticalLayout_3.addWidget(self.list_widget_company)
         self.verticalLayout_2.addWidget(self.qwidget2)
@@ -739,7 +762,6 @@ class Ui_home_widget(object):
         _translate = QtCore.QCoreApplication.translate
         home_widget.setWindowTitle(_translate("home_widget", "数据导出"))
         self.btn_import.setText(_translate("home_widget", "导入源表"))
-        self.btn_analyse.setText(_translate("home_widget", "分析数据"))
         self.BodyLabel_6.setText(_translate("home_widget", "快捷选择整月:"))
         self.combo_month.setToolTip(_translate("home_widget", "在源数据表所有日期包含的月份中快速选取整月范围"))
         self.StrongBodyLabel.setText(_translate("home_widget", "源数据表目录: "))
@@ -747,8 +769,12 @@ class Ui_home_widget(object):
         self.calendar_start.setText(_translate("home_widget", "开始日期"))
         self.calendar_end.setToolTip(_translate("home_widget", "选取导出数据的结束日期 (包含)"))
         self.calendar_end.setText(_translate("home_widget", "结束日期"))
+        self.btn_analyse.setText(_translate("home_widget", "分析数据"))
         self.btn_export.setText(_translate("home_widget", "导出数据"))
         self.check_box_select_all.setText(_translate("home_widget", "选择全部"))
+        self.label_checked_count.setText(_translate("home_widget", "0"))
+        self.BodyLabel.setText(_translate("home_widget", "/"))
+        self.label_total_count.setText(_translate("home_widget", "0"))
         self.text_log.setHtml(_translate("home_widget", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
