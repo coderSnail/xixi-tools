@@ -6,3 +6,5 @@ class Status(Enum):
     IMPORTED = 2  # 已导入源数据表
     ANALYSED = 3  # 分析完成
     MODIFIED = 4  # 文件的模板发生修改
+    EXPORTING = 5  # 文件的模板发生修改
+    EXPORTED = 6  # 文件的模板发生修改

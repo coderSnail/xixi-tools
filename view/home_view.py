@@ -59,12 +59,20 @@ class HomeView(QWidget, Ui_home_widget):
         self.btn_analyse.clicked.connect(self.analyse_data)
         self.btn_export.clicked.connect(self.export_data)
 
+    def export_status(self, exported_index):
+        self.set_progress_bar(exported_index + 1, len(self.companies_checked), '正在导出', f'正在导出数据 - [{self.companies_checked[exported_index].text()}]')
+        if exported_index + 1 == len(self.companies_checked):
+            self.set_progress_bar(exported_index + 1, len(self.companies_checked), '导出完成', f'已导出选中集团的全部数据<br />')
+            self.status_signal.emit(self.status.EXPORTED)
+
     def export_data(self):
         """ 导出选中的数据 """
+        self.status_signal.emit(self.status.EXPORTING)
         if (self.calendar_start.date.isNull() and self.calendar_end.date.isNull()) or (not self.calendar_start.date.isNull() and not self.calendar_end.date.isNull()):
 
             if self.companies_checked:
                 self.export_file_thread = ExportFileThread(self.data_dir, [company.text() for company in self.companies_checked], self.start_date, self.end_date, self.excel_data_src)
+                self.export_file_thread.status_signal.connect(self.export_status)
                 self.export_file_thread.start()
             else:
                 InfoBar.error(
@@ -121,14 +129,11 @@ class HomeView(QWidget, Ui_home_widget):
         else:
             # a.2 进一步检查文件与模板是否匹配
             self.file_check_thread = FileCheckThread(self.file_item_widgets, self.data_dir, self.data_files, self.data_config)
-            self.file_check_thread.file_check_signal.connect(self.file_check)
+            self.file_check_thread.file_check_signal.connect(self.set_progress_bar)
             self.file_check_thread.file_check_finished_signal.connect(self.file_check_finished)
             self.file_check_thread.start()
 
-    def file_check(self, file):
-        self.log(f'正在检查文件 - {file}')
-
-    def file_check_finished(self, file, is_finished, check_res):
+    def file_check_finished(self, is_finished, check_res):
 
         if is_finished:
             if check_res:
@@ -148,9 +153,8 @@ class HomeView(QWidget, Ui_home_widget):
                 # b 根据模板和源数据表配置, 解析文件包含的所有 集团-公司
                 self.load_file_thread = LoadFileThread(self.file_item_widgets, self.data_dir, self.data_files, self.data_config, self.company_config)
                 self.load_file_thread.load_file_signal.connect(self.file_loaded)
+                self.load_file_thread.progress_signal.connect(self.set_progress_bar)
                 self.load_file_thread.start()
-
-        self.log(f'检查完成 - {file}')
 
     def file_loaded(self, data_dict, is_finished):
         # 处理载入的数据(以源数据表配置名为key, 保存)
@@ -234,6 +238,7 @@ class HomeView(QWidget, Ui_home_widget):
 
     def import_data(self):
         self.status_signal.emit(Status.INIT)
+        self.log('导入源数据表, 自动匹配模板')
         files, _ = QFileDialog.getOpenFileNames(self, '导入源数据表', r'D:\00-ZJPC\桌面\数据需求', 'Excel文件(*.xlsx)')
         if files:
             self.data_dir = '/'.join(files[0].split('/')[:-1])
@@ -311,6 +316,10 @@ class HomeView(QWidget, Ui_home_widget):
             self.set_status(analyse=True, export=True, clear_data_file=False, clear_data_company=False)
         if status == Status.MODIFIED:
             self.set_status(analyse=True, export=False, clear_data_file=True, clear_data_company=True)
+        if status == Status.EXPORTING:
+            self.set_status(analyse=False, export=False, clear_data_file=False, clear_data_company=False)
+        if status == Status.EXPORTED:
+            self.set_status(analyse=True, export=True, clear_data_file=False, clear_data_company=False)
 
     def set_status(self, analyse, export, clear_data_file, clear_data_company):
         self.btn_analyse.setEnabled(analyse)
@@ -340,3 +349,11 @@ class HomeView(QWidget, Ui_home_widget):
         else:
             self.text_log.insertHtml(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}:  {log_text}<br />')
         self.text_log.moveCursor(QTextCursor.MoveOperation.End)
+
+    def set_progress_bar(self, current, total, msg, log):
+        self.process_bar.setMaximum(total)
+        self.process_bar.setVal(current)
+        self.label_process_total.setText(str(total))
+        self.label_process_current.setText(str(current))
+        self.label_msg.setText(msg)
+        self.log(log)

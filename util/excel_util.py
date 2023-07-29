@@ -8,7 +8,8 @@ from openpyxl.utils import get_column_letter
 from openpyxl.workbook import Workbook
 
 
-def write_excel(excel_file, sheet_list):
+def write_excel(excel_out_dir, file_name_company, file_name_channel_set, file_name_time, sheet_list):
+
     wb = Workbook()
 
     for sheet_dict in sheet_list:
@@ -55,6 +56,18 @@ def write_excel(excel_file, sheet_list):
                     col.alignment = copy.copy(sheet_dict['sheet_data_style'][index]['alignment'])
 
     del wb['Sheet']
+    # 检查sheet表是否存在某个渠道的数据, 若不存在则文件名中去除此渠道
+    final_file_name_channel_set = set()
+    for sheet in wb:
+        for file_name_channel in file_name_channel_set:
+            if sheet.title.__contains__(file_name_channel):
+                final_file_name_channel_set.add(file_name_channel)
+
+    final_file_name_channel_list = list(final_file_name_channel_set)
+    final_file_name_channel_list.sort()
+
+    filename = f'{file_name_company}-{"-".join(final_file_name_channel_list)}-{file_name_time}数据.xlsx'
+    excel_file = os.path.join(excel_out_dir, filename)
     wb.save(excel_file)
 
     return True

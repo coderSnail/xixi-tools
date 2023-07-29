@@ -18,6 +18,7 @@ class Ui_home_widget(object):
 "}")
         self.verticalLayout = QtWidgets.QVBoxLayout(home_widget)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setSpacing(3)
         self.verticalLayout.setObjectName("verticalLayout")
         self.horizontalLayout_8 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_8.setContentsMargins(-1, -1, 9, -1)
@@ -731,6 +732,30 @@ class Ui_home_widget(object):
         self.verticalLayout_2.addWidget(self.qwidget2)
         self.horizontalLayout_8.addLayout(self.verticalLayout_2)
         self.verticalLayout.addLayout(self.horizontalLayout_8)
+        self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
+        self.horizontalLayout_3.setContentsMargins(-1, 0, 9, -1)
+        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.label_msg = BodyLabel(parent=home_widget)
+        self.label_msg.setText("")
+        self.label_msg.setObjectName("label_msg")
+        self.horizontalLayout_3.addWidget(self.label_msg)
+        self.process_bar = ProgressBar(parent=home_widget)
+        self.process_bar.setMinimumSize(QtCore.QSize(0, 6))
+        self.process_bar.setMaximumSize(QtCore.QSize(16777215, 6))
+        self.process_bar.setMaximum(100)
+        self.process_bar.setProperty("value", 0)
+        self.process_bar.setObjectName("process_bar")
+        self.horizontalLayout_3.addWidget(self.process_bar)
+        self.label_process_current = BodyLabel(parent=home_widget)
+        self.label_process_current.setObjectName("label_process_current")
+        self.horizontalLayout_3.addWidget(self.label_process_current)
+        self.BodyLabel_8 = BodyLabel(parent=home_widget)
+        self.BodyLabel_8.setObjectName("BodyLabel_8")
+        self.horizontalLayout_3.addWidget(self.BodyLabel_8)
+        self.label_process_total = BodyLabel(parent=home_widget)
+        self.label_process_total.setObjectName("label_process_total")
+        self.horizontalLayout_3.addWidget(self.label_process_total)
+        self.verticalLayout.addLayout(self.horizontalLayout_3)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setContentsMargins(-1, -1, 6, 6)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
@@ -748,12 +773,11 @@ class Ui_home_widget(object):
 "PlainTextEdit {\n"
 "    padding: 0px 0px 0px 10px;\n"
 "}")
-        self.text_log.setReadOnly(True)
         self.text_log.setObjectName("text_log")
         self.horizontalLayout_2.addWidget(self.text_log)
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.verticalLayout.setStretch(0, 2)
-        self.verticalLayout.setStretch(1, 1)
+        self.verticalLayout.setStretch(2, 1)
 
         self.retranslateUi(home_widget)
         QtCore.QMetaObject.connectSlotsByName(home_widget)
@@ -775,12 +799,7 @@ class Ui_home_widget(object):
         self.label_checked_count.setText(_translate("home_widget", "0"))
         self.BodyLabel.setText(_translate("home_widget", "/"))
         self.label_total_count.setText(_translate("home_widget", "0"))
-        self.text_log.setHtml(_translate("home_widget", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
-"<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
-"p, li { white-space: pre-wrap; }\n"
-"hr { height: 1px; border-width: 0; }\n"
-"li.unchecked::marker { content: \"\\2610\"; }\n"
-"li.checked::marker { content: \"\\2612\"; }\n"
-"</style></head><body style=\" font-family:\'Segoe UI\',\'Microsoft YaHei\',\'PingFang SC\'; font-size:14px; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
-from qfluentwidgets import BodyLabel, CalendarPicker, CheckBox, ComboBox, ListWidget, PrimaryPushButton, SearchLineEdit, StrongBodyLabel, TextEdit
+        self.label_process_current.setText(_translate("home_widget", "0"))
+        self.BodyLabel_8.setText(_translate("home_widget", "/"))
+        self.label_process_total.setText(_translate("home_widget", "0"))
+from qfluentwidgets import BodyLabel, CalendarPicker, CheckBox, ComboBox, ListWidget, PrimaryPushButton, ProgressBar, SearchLineEdit, StrongBodyLabel, TextEdit

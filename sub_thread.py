@@ -7,7 +7,6 @@ import calendar
 import os.path
 from datetime import datetime
 
-import pypinyin
 from PyQt6.QtCore import QThread, pyqtSignal, QDate
 
 from util import excel_util
@@ -15,8 +14,8 @@ from util.excel_util import load_excel
 
 
 class FileCheckThread(QThread):
-    file_check_signal = pyqtSignal(str)
-    file_check_finished_signal = pyqtSignal(str, bool, list)  # 文件名, 是否完成, 错误信息
+    file_check_signal = pyqtSignal(int, int, str, str)
+    file_check_finished_signal = pyqtSignal(bool, list)  # 文件名, 是否完成, 错误信息
 
     def __init__(self, file_item_widgets, data_dir, data_files, data_config):
         super().__init__()
@@ -27,19 +26,22 @@ class FileCheckThread(QThread):
 
     def run(self) -> None:
         check_res = []
-        # todo 这里循环似乎不正确
         for index, file_item in enumerate(self.file_item_widgets):
-            self.file_check_signal.emit(self.data_files[index])
+            self.file_check_signal.emit(index + 1, len(self.file_item_widgets), '检查文件', f'正在检查文件 - {self.data_files[index]}')
 
             file_type = file_item.combo_file_type.text()
             code, msg = excel_util.check_file_type(self.data_dir, self.data_files[index], self.data_config[file_type])
             if not code:
                 check_res.append(msg)
 
-            self.file_check_finished_signal.emit(self.data_files[index], True if index == len(self.file_item_widgets) - 1 else False, check_res)
+            self.file_check_finished_signal.emit(True if index == len(self.file_item_widgets) - 1 else False, check_res)
+
+            if index + 1 == len(self.file_item_widgets):
+                self.file_check_signal.emit(index + 1, len(self.file_item_widgets), '检查文件', f'所有文件检查完成<br />')
 
 
 class LoadFileThread(QThread):
+    progress_signal = pyqtSignal(int, int, str, str)
     load_file_signal = pyqtSignal(dict, bool)
 
     def __init__(self, file_item_widgets, data_dir, data_files, data_config, company_config):
@@ -58,17 +60,21 @@ class LoadFileThread(QThread):
                 company_group_dict[company] = key
 
         for index, file_item in enumerate(self.file_item_widgets):
+            self.progress_signal.emit(index + 1, len(self.file_item_widgets), '分析数据', f'开始分析表格数据 - [{self.data_files[index]}]')
             excel_src = os.path.join(self.data_dir, self.data_files[index])
             file_type = file_item.combo_file_type.text()
 
             title, data, title_style, data_style = load_excel(excel_src, self.data_config[file_type], company_group_dict)
             data_dict = dict()
             data_dict['file_type'] = file_type
+            data_dict['channel_id'] = self.data_config[file_type]['channel_id']
             data_dict['title'] = title
             data_dict['data'] = data
             data_dict['title_style'] = title_style
             data_dict['data_style'] = data_style
             self.load_file_signal.emit(data_dict, True if index == len(self.file_item_widgets) - 1 else False)
+            if index + 1 == len(self.file_item_widgets):
+                self.progress_signal.emit(index + 1, len(self.file_item_widgets), '分析数据', f'所有表格数据分析完成<br />')
 
 
 class LoadGroupsThread(QThread):
@@ -100,6 +106,8 @@ class LoadGroupsThread(QThread):
 
 
 class ExportFileThread(QThread):
+    status_signal = pyqtSignal(int)
+
     def __init__(self, data_dir, companies, start_date, end_date, excel_data_src):
         super().__init__()
         self.data_dir = data_dir
@@ -109,7 +117,8 @@ class ExportFileThread(QThread):
         self.excel_data_src = excel_data_src
 
     def run(self) -> None:
-        for company in self.companies:
+        for index, company in enumerate(self.companies):
+            self.status_signal.emit(index)
             # 每个集团公司生成一个文件
             file_name_company = company  # 文件名-集团
             file_name_channel_set = set()  # 文件名-渠道列表
@@ -136,7 +145,7 @@ class ExportFileThread(QThread):
             sheet_list = []
             for file_type in self.excel_data_src.keys():
                 # 渠道拼音首字母
-                file_name_channel_set.add(pypinyin.pinyin(file_type)[0][0][0])
+                file_name_channel_set.add(self.excel_data_src[file_type]['channel_id'])
 
                 # sheet表的数据暂存到字典中
                 sheet_dict = dict()
@@ -164,9 +173,4 @@ class ExportFileThread(QThread):
             if not os.path.exists(excel_out_dir):
                 os.makedirs(excel_out_dir)
 
-            file_name_channel_list = list(file_name_channel_set)
-            file_name_channel_list.sort()
-            file_name = f'{file_name_company}-{"".join(file_name_channel_list)}-{file_name_time}数据.xlsx'
-
-            finished = excel_util.write_excel(os.path.join(excel_out_dir, file_name), sheet_list)
-
+            finished = excel_util.write_excel(excel_out_dir, file_name_company, file_name_channel_set, file_name_time, sheet_list)
