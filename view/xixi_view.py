@@ -1,10 +1,8 @@
-from PyQt6.QtGui import QIcon
 from PyQt6.QtWidgets import QWidget
 from qfluentwidgets import FluentIcon
 from qfluentwidgets import NavigationItemPosition
 
 from ui.xixi_ui import Ui_xixi
-from util.common_util import get_real_path
 from view.config_view import ConfigView
 from view.help_view import HelpView
 from view.home_view import HomeView
@@ -14,7 +12,6 @@ class XixiView(QWidget, Ui_xixi):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.setWindowIcon(QIcon(get_real_path('resources', 'xixi.ico')))
 
         self.home_view = HomeView(self)
         self.config_view = ConfigView(self)
