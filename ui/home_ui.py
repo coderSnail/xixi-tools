@@ -39,7 +39,7 @@ class Ui_home_widget(object):
 "    border: 1px solid rgba(0, 0, 0, 0.073);\n"
 "    border-bottom: 1px solid rgba(0, 0, 0, 0.183);\n"
 "    border-radius: 5px;\n"
-"    /* font: 14px \'Segoe UI\', \'Microsoft YaHei\'; */\n"
+"    font: 14px  \'Microsoft YaHei\'; \n"
 "    padding: 5px 12px 6px 12px;\n"
 "    outline: none;\n"
 "}\n"
@@ -100,9 +100,38 @@ class Ui_home_widget(object):
         self.combo_month.setMaximumSize(QtCore.QSize(75, 16777215))
         font = QtGui.QFont()
         font.setFamily("Microsoft YaHei")
-        font.setPointSize(10)
+        font.setPointSize(-1)
         font.setBold(False)
+        font.setItalic(False)
         self.combo_month.setFont(font)
+        self.combo_month.setStyleSheet("ComboBox {\n"
+"    border: 1px solid rgba(0, 0, 0, 0.073);\n"
+"    border-radius: 5px;\n"
+"    border-bottom: 1px solid rgba(0, 0, 0, 0.183);\n"
+"    padding: 5px 31px 6px 11px;\n"
+"    font: 14px  \'Microsoft YaHei\', \'PingFang SC\'; \n"
+"    color: black;\n"
+"    background-color: rgba(255, 255, 255, 0.7);\n"
+"    text-align: left;\n"
+"}\n"
+"\n"
+"ComboBox:hover {\n"
+"    background-color: rgba(249, 249, 249, 0.5);\n"
+"}\n"
+"\n"
+"ComboBox:pressed {\n"
+"    background-color: rgba(249, 249, 249, 0.3);\n"
+"    border-bottom: 1px solid rgba(0, 0, 0, 0.073);\n"
+"    color: rgba(0, 0, 0, 0.63);\n"
+"}\n"
+"\n"
+"ComboBox:disabled {\n"
+"    color: rgba(0, 0, 0, 0.36);\n"
+"    background: rgba(249, 249, 249, 0.3);\n"
+"    border: 1px solid rgba(0, 0, 0, 0.06);\n"
+"    border-bottom: 1px solid rgba(0, 0, 0, 0.06);\n"
+"}\n"
+"")
         self.combo_month.setText("")
         self.combo_month.setCheckable(False)
         self.combo_month.setChecked(False)
@@ -151,7 +180,7 @@ class Ui_home_widget(object):
 "    outline: none;\n"
 "    /* border: none; */\n"
 "  border-top: 1px solid #ddd;\n"
-"    /* font: 13px \'Segoe UI\', \'Microsoft YaHei\'; */\n"
+"    /* font: 13px  \'Microsoft YaHei\'; */\n"
 "    selection-background-color: transparent;\n"
 "    alternate-background-color: transparent;\n"
 "    padding-left: 4px;\n"
@@ -252,13 +281,13 @@ class Ui_home_widget(object):
         self.calendar_start.setMinimumSize(QtCore.QSize(120, 0))
         self.calendar_start.setMaximumSize(QtCore.QSize(120, 16777215))
         font = QtGui.QFont()
-        font.setFamily("Segoe UI")
+        font.setFamily("Microsoft YaHei")
         font.setPointSize(-1)
         font.setBold(False)
         font.setItalic(False)
         self.calendar_start.setFont(font)
         self.calendar_start.setStyleSheet("#titleButton {\n"
-"    font: 14px  \'Segoe UI\', \'Microsoft YaHei\', \'PingFang SC\';\n"
+"    font: 14px  \'Microsoft YaHei\', \'PingFang SC\';\n"
 "    font-weight: 500;\n"
 "    color: black;\n"
 "    background-color: transparent;\n"
@@ -282,7 +311,7 @@ class Ui_home_widget(object):
 "}\n"
 "\n"
 "#weekDayLabel {\n"
-"    font: 12px  \'Segoe UI\', \'Microsoft YaHei\', \'PingFang SC\';\n"
+"    font: 12px  \'Microsoft YaHei\', \'PingFang SC\';\n"
 "    font-weight: 500;\n"
 "    color: black;\n"
 "    background-color: transparent;\n"
@@ -315,7 +344,7 @@ class Ui_home_widget(object):
 "    border: 1px solid rgba(0, 0, 0, 0.073);\n"
 "    border-bottom: 1px solid rgba(0, 0, 0, 0.183);\n"
 "    border-radius: 5px;\n"
-"    font: 14px  \'Segoe UI\', \'Microsoft YaHei\', \'PingFang SC\';\n"
+"    font: 14px  \'Microsoft YaHei\', \'PingFang SC\';\n"
 "    padding: 5px 32px 6px 12px;\n"
 "    outline: none;\n"
 "    text-align: left;\n"
@@ -347,13 +376,13 @@ class Ui_home_widget(object):
         self.calendar_end.setMinimumSize(QtCore.QSize(120, 0))
         self.calendar_end.setMaximumSize(QtCore.QSize(120, 16777215))
         font = QtGui.QFont()
-        font.setFamily("Segoe UI")
+        font.setFamily("Microsoft YaHei")
         font.setPointSize(-1)
         font.setBold(False)
         font.setItalic(False)
         self.calendar_end.setFont(font)
         self.calendar_end.setStyleSheet("#titleButton {\n"
-"    font: 14px  \'Segoe UI\', \'Microsoft YaHei\', \'PingFang SC\';\n"
+"    font: 14px   \'Microsoft YaHei\', \'PingFang SC\';\n"
 "    font-weight: 500;\n"
 "    color: black;\n"
 "    background-color: transparent;\n"
@@ -377,7 +406,7 @@ class Ui_home_widget(object):
 "}\n"
 "\n"
 "#weekDayLabel {\n"
-"    font: 12px  \'Segoe UI\', \'Microsoft YaHei\', \'PingFang SC\';\n"
+"    font: 12px   \'Microsoft YaHei\', \'PingFang SC\';\n"
 "    font-weight: 500;\n"
 "    color: black;\n"
 "    background-color: transparent;\n"
@@ -410,7 +439,7 @@ class Ui_home_widget(object):
 "    border: 1px solid rgba(0, 0, 0, 0.073);\n"
 "    border-bottom: 1px solid rgba(0, 0, 0, 0.183);\n"
 "    border-radius: 5px;\n"
-"    font: 14px  \'Segoe UI\', \'Microsoft YaHei\', \'PingFang SC\';\n"
+"    font: 14px   \'Microsoft YaHei\', \'PingFang SC\';\n"
 "    padding: 5px 32px 6px 12px;\n"
 "    outline: none;\n"
 "    text-align: left;\n"
@@ -450,7 +479,7 @@ class Ui_home_widget(object):
 "    border: 1px solid rgba(0, 0, 0, 0.073);\n"
 "    border-bottom: 1px solid rgba(0, 0, 0, 0.183);\n"
 "    border-radius: 5px;\n"
-"    /* font: 14px \'Segoe UI\', \'Microsoft YaHei\'; */\n"
+"    /* font: 14px  \'Microsoft YaHei\'; */\n"
 "    padding: 5px 12px 6px 12px;\n"
 "    outline: none;\n"
 "}\n"
@@ -514,7 +543,7 @@ class Ui_home_widget(object):
 "    border: 1px solid rgba(0, 0, 0, 0.073);\n"
 "    border-bottom: 1px solid rgba(0, 0, 0, 0.183);\n"
 "    border-radius: 5px;\n"
-"    /* font: 14px \'Segoe UI\', \'Microsoft YaHei\'; */\n"
+"    /* font: 14px  \'Microsoft YaHei\'; */\n"
 "    padding: 5px 12px 6px 12px;\n"
 "    outline: none;\n"
 "}\n"
@@ -584,13 +613,73 @@ class Ui_home_widget(object):
         self.horizontalLayout_9.setSpacing(0)
         self.horizontalLayout_9.setObjectName("horizontalLayout_9")
         self.check_box_select_all = CheckBox(parent=self.widget_2)
-        self.check_box_select_all.setMinimumSize(QtCore.QSize(29, 22))
+        self.check_box_select_all.setMinimumSize(QtCore.QSize(100, 0))
+        self.check_box_select_all.setMaximumSize(QtCore.QSize(100, 16777215))
         font = QtGui.QFont()
-        font.setFamily("Segoe UI")
+        font.setFamily("Microsoft YaHei")
         font.setPointSize(-1)
         font.setBold(False)
         font.setItalic(False)
         self.check_box_select_all.setFont(font)
+        self.check_box_select_all.setStyleSheet("CheckBox {\n"
+"    color: black;\n"
+"    font: 14px  \'Microsoft YaHei\', \'PingFang SC\';\n"
+"    spacing: 8px;\n"
+"    outline: none;\n"
+"    margin-left: 1px;\n"
+"}\n"
+"\n"
+"CheckBox::indicator {\n"
+"    width: 18px;\n"
+"    height: 18px;\n"
+"    border-radius: 5px;\n"
+"    border: 1px solid rgba(0, 0, 0, 0.48);\n"
+"    background-color: rgba(0, 0, 0, 0.022);\n"
+"}\n"
+"\n"
+"CheckBox::indicator:hover {\n"
+"    border: 1px solid rgba(0, 0, 0, 0.56);\n"
+"    background-color: rgba(0, 0, 0, 0.05);\n"
+"}\n"
+"\n"
+"CheckBox::indicator:pressed {\n"
+"    border: 1px solid rgba(0, 0, 0, 0.27);\n"
+"    background-color: rgba(0, 0, 0, 0.12);\n"
+"}\n"
+"\n"
+"CheckBox::indicator:checked,\n"
+"CheckBox::indicator:indeterminate {\n"
+"    border: 1px solid #009faa;\n"
+"    background-color: #009faa;\n"
+"}\n"
+"\n"
+"\n"
+"CheckBox::indicator:checked:hover,\n"
+"CheckBox::indicator:indeterminate:hover {\n"
+"    border: 1px solid #00a7b3;\n"
+"    background-color: #00a7b3;\n"
+"}\n"
+"\n"
+"CheckBox::indicator:checked:pressed,\n"
+"CheckBox::indicator:indeterminate:pressed {\n"
+"    border: 1px solid #3eabb3;\n"
+"    background-color: #3eabb3;\n"
+"}\n"
+"\n"
+"CheckBox:disabled {\n"
+"    color: rgba(0, 0, 0, 110);\n"
+"}\n"
+"\n"
+"CheckBox::indicator:disabled {\n"
+"    border: 1px solid rgba(0, 0, 0, 0.27);\n"
+"    background-color: transparent;\n"
+"}\n"
+"\n"
+"CheckBox::indicator:checked:disabled,\n"
+"CheckBox::indicator:indeterminate:disabled {\n"
+"    border: 1px solid rgb(199, 199, 199);\n"
+"    background-color: rgb(199, 199, 199);\n"
+"}")
         self.check_box_select_all.setObjectName("check_box_select_all")
         self.horizontalLayout_9.addWidget(self.check_box_select_all)
         self.BodyLabel_4 = BodyLabel(parent=self.widget_2)
@@ -623,6 +712,61 @@ class Ui_home_widget(object):
         font.setPointSize(10)
         font.setBold(False)
         self.line_edit_search.setFont(font)
+        self.line_edit_search.setStyleSheet("LineEdit, TextEdit, PlainTextEdit {\n"
+"    color: black;\n"
+"    background-color: rgba(255, 255, 255, 0.7);\n"
+"    border: 1px solid rgba(0, 0, 0, 13);\n"
+"    border-bottom: 1px solid rgba(0, 0, 0, 100);\n"
+"    border-radius: 5px;\n"
+"    /* font: 14px \"Microsoft YaHei\"; */\n"
+"    padding: 0px 10px;\n"
+"    selection-background-color: #00a7b3;\n"
+"}\n"
+"\n"
+"TextEdit,\n"
+"PlainTextEdit {\n"
+"    padding: 0px 0px 0px 10px;\n"
+"}\n"
+"\n"
+"LineEdit:hover, TextEdit:hover, PlainTextEdit:hover {\n"
+"    background-color: rgba(249, 249, 249, 0.5);\n"
+"    border: 1px solid rgba(0, 0, 0, 13);\n"
+"    border-bottom: 1px solid rgba(0, 0, 0, 100);\n"
+"}\n"
+"\n"
+"LineEdit:focus {\n"
+"    border-bottom: 1px solid rgba(0, 0, 0, 13);\n"
+"    background-color: white;\n"
+"}\n"
+"\n"
+"TextEdit:focus,\n"
+"PlainTextEdit:focus {\n"
+"    border-bottom: 1px solid #009faa;\n"
+"    background-color: white;\n"
+"}\n"
+"\n"
+"LineEdit:disabled, TextEdit:disabled,\n"
+"PlainTextEdit:disabled {\n"
+"    color: rgba(0, 0, 0, 150);\n"
+"    background-color: rgba(249, 249, 249, 0.3);\n"
+"    border: 1px solid rgba(0, 0, 0, 13);\n"
+"    border-bottom: 1px solid rgba(0, 0, 0, 13);\n"
+"}\n"
+"\n"
+"#lineEditButton {\n"
+"    background-color: transparent;\n"
+"    border-radius: 4px;\n"
+"    margin: 0;\n"
+"}\n"
+"\n"
+"#lineEditButton:hover {\n"
+"    background-color: rgba(0, 0, 0, 9);\n"
+"}\n"
+"\n"
+"#lineEditButton:pressed {\n"
+"    background-color: rgba(0, 0, 0, 6);\n"
+"}\n"
+"")
         self.line_edit_search.setObjectName("line_edit_search")
         self.horizontalLayout_9.addWidget(self.line_edit_search)
         spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
@@ -639,7 +783,7 @@ class Ui_home_widget(object):
 "    outline: none;\n"
 "    /* border: none; */\n"
 "  border-top: 1px solid #ddd;\n"
-"    /* font: 13px \'Segoe UI\', \'Microsoft YaHei\'; */\n"
+"    /* font: 13px  \'Microsoft YaHei\'; */\n"
 "    selection-background-color: transparent;\n"
 "    alternate-background-color: transparent;\n"
 "    padding-left: 4px;\n"
