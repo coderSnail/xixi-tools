@@ -17,7 +17,7 @@ class Ui_home_widget(object):
 "  background-color: #fff;\n"
 "}")
         self.verticalLayout = QtWidgets.QVBoxLayout(home_widget)
-        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.verticalLayout.setContentsMargins(0, 6, 0, 0)
         self.verticalLayout.setSpacing(3)
         self.verticalLayout.setObjectName("verticalLayout")
         self.horizontalLayout_8 = QtWidgets.QHBoxLayout()

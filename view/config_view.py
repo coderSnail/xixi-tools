@@ -17,11 +17,11 @@ class ConfigView(QWidget, Ui_config_widget):
 
         self.data_config = common_util.load_data_config()
         self.show_data_config()
-        self.company_config = common_util.load_company_config()
-        self.show_company_config()
+        # self.company_config = common_util.load_company_config()
+        # self.show_company_config()
 
-        self.btn_add_data_config.clicked.connect(self.add_data_config)
-        self.btn_add_company_config.clicked.connect(self.add_company_config)
+        # self.btn_add_data_config.clicked.connect(self.add_data_config)
+        # self.btn_add_company_config.clicked.connect(self.add_company_config)
 
     def add_data_config(self):
         self.add_data_config_window = AddDataConfigView()
@@ -177,15 +177,14 @@ class ConfigView(QWidget, Ui_config_widget):
                     """)
                     h_layout = QHBoxLayout()
                     h_layout.setContentsMargins(0, 0, 0, 0)
-                    spacer_item = QtWidgets.QSpacerItem(5, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum)
-                    h_layout.addItem(spacer_item)
+                    h_layout.addItem(QtWidgets.QSpacerItem(5, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum))
                     check_box = CheckBox(temp_widget)
                     check_box.setChecked(item)
                     check_box.setEnabled(False)
                     check_box.setFixedHeight(row_height - 2)
                     check_box.setStyleSheet("""
                     CheckBox:disabled {
-                        font: 14px 'Segoe UI', 'Microsoft YaHei', 'PingFang SC';
+                        font: 14px 'Microsoft YaHei', 'PingFang SC';
                         outline: none;
                     }
                     CheckBox::indicator:disabled {
@@ -203,7 +202,7 @@ class ConfigView(QWidget, Ui_config_widget):
                     """)
 
                     h_layout.addWidget(check_box)
-                    h_layout.addItem(spacer_item)
+                    h_layout.addItem(QtWidgets.QSpacerItem(5, 20, QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Minimum))
                     temp_widget.setLayout(h_layout)
 
                     group_box.layout().addWidget(temp_widget, row, col, 1, 1)
