@@ -17,11 +17,11 @@ class ConfigView(QWidget, Ui_config_widget):
 
         self.data_config = common_util.load_data_config()
         self.show_data_config()
-        # self.company_config = common_util.load_company_config()
-        # self.show_company_config()
+        self.company_config = common_util.load_company_config()
+        self.show_company_config()
 
-        # self.btn_add_data_config.clicked.connect(self.add_data_config)
-        # self.btn_add_company_config.clicked.connect(self.add_company_config)
+        self.btn_add_data_config.clicked.connect(self.add_data_config)
+        self.btn_add_company_config.clicked.connect(self.add_company_config)
 
     def add_data_config(self):
         self.add_data_config_window = AddDataConfigView()
