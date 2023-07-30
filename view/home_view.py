@@ -154,6 +154,7 @@ class HomeView(QWidget, Ui_home_widget):
                 self.load_file_thread = LoadFileThread(self.file_item_widgets, self.data_dir, self.data_files, self.data_config, self.company_config)
                 self.load_file_thread.load_file_signal.connect(self.file_loaded)
                 self.load_file_thread.progress_signal.connect(self.set_progress_bar)
+                self.load_file_thread.msg_signal.connect(self.log)
                 self.load_file_thread.start()
 
     def file_loaded(self, data_dict, is_finished):
@@ -238,9 +239,9 @@ class HomeView(QWidget, Ui_home_widget):
 
     def import_data(self):
         self.status_signal.emit(Status.INIT)
-        self.log('导入源数据表, 自动匹配模板')
-        files, _ = QFileDialog.getOpenFileNames(self, '导入源数据表', r'D:\00-ZJPC\桌面\数据需求', 'Excel文件(*.xlsx)')
+        files, _ = QFileDialog.getOpenFileNames(self, '导入源数据表', '', 'Excel文件(*.xlsx)')
         if files:
+            self.log('导入源数据表, 自动匹配模板')
             self.data_dir = '/'.join(files[0].split('/')[:-1])
             self.label_data_dir.setText(self.data_dir)
             self.data_files = [file.split('/')[-1] for file in files]
@@ -286,7 +287,8 @@ class HomeView(QWidget, Ui_home_widget):
         else:
             self.start_date = self.calendar_start.date
             self.end_date = self.calendar_end.date
-            self.status_signal.emit(Status.IMPORTED)
+            if self.data_files:
+                self.status_signal.emit(Status.IMPORTED)
 
     def combo_month_changed(self):
         """ 快捷选择月份下拉框触发时, 自动选择对应月份的第一天和最后一天 """

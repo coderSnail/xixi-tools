@@ -30,6 +30,7 @@ class AddCompanyConfigView(QWidget, Ui_company_config_widget):
         self.line_group.editingFinished.connect(self.verify_company_config_group)
         self.btn_add_company.clicked.connect(self.show_add_company)
         self.btn_confirm.clicked.connect(self.add_company_config)
+        self.btn_cancel.clicked.connect(self.close)
 
     def show_add_company(self):
         self.add_company_window = AddCompanyView(companies=self.companies)

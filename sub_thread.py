@@ -43,6 +43,7 @@ class FileCheckThread(QThread):
 class LoadFileThread(QThread):
     progress_signal = pyqtSignal(int, int, str, str)
     load_file_signal = pyqtSignal(dict, bool)
+    msg_signal = pyqtSignal(str, str)
 
     def __init__(self, file_item_widgets, data_dir, data_files, data_config, company_config):
         super().__init__()
@@ -63,6 +64,8 @@ class LoadFileThread(QThread):
             self.progress_signal.emit(index + 1, len(self.file_item_widgets), '分析数据', f'开始分析表格数据 - [{self.data_files[index]}]')
             excel_src = os.path.join(self.data_dir, self.data_files[index])
             file_type = file_item.combo_file_type.text()
+            if not self.data_config[file_type]['has_time']:
+                self.msg_signal.emit(f'请知悉: [{self.data_files[index]}] - 此文件不存在时间列, 无法指定日期范围筛选数据', '#009faa')
 
             title, data, title_style, data_style = load_excel(excel_src, self.data_config[file_type], company_group_dict)
             data_dict = dict()
