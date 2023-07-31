@@ -1,12 +1,6 @@
 # 帮助文档
 
-> 作者: 👉 嘻总的小迷弟呀 👈
-
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;💖
-
-> 为我嘻哥 🤞 疯狂打 call ! 💪
-
-> 甚至想放个嘻哥的收款码啊哈哈哈😝
+💖💖💖💖💖💖
 
 ## 一、基本使用
 ### 1. 导入源数据表
