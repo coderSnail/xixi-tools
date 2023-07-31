@@ -60,7 +60,7 @@ def write_excel(excel_out_dir, file_name_company, file_name_channel_set, file_na
     final_file_name_channel_set = set()
     for sheet in wb:
         for file_name_channel in file_name_channel_set:
-            if sheet.title.__contains__(file_name_channel):
+            if sheet.title.upper().__contains__(file_name_channel.upper()):
                 final_file_name_channel_set.add(file_name_channel)
 
     final_file_name_channel_list = list(final_file_name_channel_set)
