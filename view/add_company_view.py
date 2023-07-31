@@ -14,7 +14,7 @@ class AddCompanyView(QWidget, Ui_add_company_widget):
     def __init__(self, parent=None, companies=None):
         super().__init__(parent=parent)
         self.setupUi(self)
-        self.setWindowIcon(QIcon(get_real_path('resources', 'xixi.ico')))
+        self.setWindowIcon(QIcon(get_real_path('xixi.ico')))
         self.line_company_name.setFocus()
         self.companies = companies
 

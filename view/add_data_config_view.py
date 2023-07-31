@@ -14,7 +14,7 @@ class AddDataConfigView(QWidget, Ui_data_config_widget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.setupUi(self)
-        self.setWindowIcon(QIcon(get_real_path('resources', 'xixi.ico')))
+        self.setWindowIcon(QIcon(get_real_path('xixi.ico')))
         self.line_data_config_name.setFocus()
 
         self.data_config = common_util.load_data_config()

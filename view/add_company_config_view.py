@@ -15,7 +15,7 @@ class AddCompanyConfigView(QWidget, Ui_company_config_widget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.setupUi(self)
-        self.setWindowIcon(QIcon(get_real_path('resources', 'xixi.ico')))
+        self.setWindowIcon(QIcon(get_real_path('xixi.ico')))
         self.list_company.setFocusPolicy(Qt.FocusPolicy.NoFocus)
         self.line_group.setFocus()
 
